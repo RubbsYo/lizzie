@@ -13,6 +13,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using ReLogic.Content;
+using LizSoundPack.Content.Effects;
+using LizSoundPack.Core.Effects;
 
 namespace LizSoundPack.Projectiles;
 
@@ -20,9 +22,10 @@ public class ProjectileSounds : GlobalProjectile
 {
     public override bool InstancePerEntity => true;
     public int juiceStrength = 1;
-    public Item item;
+    public Item? item;
     public Vector2 startpos;
     public int spawnTime;
+    public int timer;
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
         if (source is EntitySource_ItemUse itemSource)
@@ -33,7 +36,29 @@ public class ProjectileSounds : GlobalProjectile
                 juiceStrength = 2;
             item = itemSource.Item;
         }
+        if (projectile.type == ProjectileID.BulletHighVelocity)
+        {
+            projectile.extraUpdates = 256;
+        }
         startpos = projectile.Center;
+    }
+
+    public override void Kill(Projectile projectile, int timeLeft)
+    {
+        if (projectile.type == ProjectileID.BulletHighVelocity)
+        {
+            float dist = startpos.Distance(projectile.Center);
+            ParticleEntity.Instantiate<TracerParticle>(h =>
+            {
+                h.position = startpos;
+                h.scale.X *= dist;
+                h.rotation = startpos.DirectionTo(projectile.Center).ToRotation();
+            });
+            ParticleEntity.Instantiate<BulletDestroyParticle>(h =>
+            {
+                h.position = projectile.Center;
+            });
+        }
     }
 
     public override void AI(Projectile projectile)
@@ -42,6 +67,35 @@ public class ProjectileSounds : GlobalProjectile
         if (projectile.type == 933) //Zenith addendums.
         {
 
+        }
+        if (projectile.aiStyle == ProjAIStyleID.Spear)
+        {
+            if (item != null)
+            {
+                timer++;
+                if (timer < item.useTime/2)
+                {
+
+                }
+            }
+        }
+        if (projectile.type == ProjectileID.BulletHighVelocity)
+        {
+            if (spawnTime >= 192 || projectile.position.Y+projectile.velocity.Y <= 0)
+            {
+                projectile.Kill();
+                float dist = startpos.Distance(projectile.Center);
+                ParticleEntity.Instantiate<TracerParticle>(h =>
+                {
+                    h.position = startpos;
+                    h.scale.X *= dist;
+                    h.rotation = startpos.DirectionTo(projectile.Center).ToRotation();
+                });
+                ParticleEntity.Instantiate<BulletDestroyParticle>(h =>
+                {
+                    h.position = projectile.Center;
+                });
+            }
         }
     }
 }
@@ -113,6 +167,8 @@ public class ProjectileRicochet : GlobalProjectile
                 }
             }
         }
+        if (projectile.type == ProjectileID.BulletHighVelocity)
+            return false;
         return true;
     }
 }

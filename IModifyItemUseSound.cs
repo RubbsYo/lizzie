@@ -5,6 +5,8 @@ using Terraria.ModLoader.Core;
 using Terraria.ID;
 using Hook = LizSoundPack.Common.Hooks.Items.IModifyItemUseSound;
 using LizSoundPack.Projectiles;
+using LizSoundPack;
+using Microsoft.Xna.Framework;
 
 namespace LizSoundPack.Common.Hooks.Items
 {
@@ -43,6 +45,7 @@ namespace LizSoundPack.Common.Hooks.Items
 		public static readonly SoundStyle fireShotgun = new SoundStyle("LizSoundPack/sounds/fireShotgun") { Volume = 0.4f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle fireMachinegun = new SoundStyle("LizSoundPack/sounds/fireMachinegun") { Volume = 0.3f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle fireRifle = new SoundStyle("LizSoundPack/sounds/fireRifle") { Volume = 0.3f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle fireVeryStrong = new SoundStyle("LizSoundPack/sounds/fireVeryStrong") { Volume = 0.4f, PitchVariance = 0.25f, };
 		public override void Load()
 		{
 			On.Terraria.Player.ItemCheck_StartActualUse += (orig, player, item) =>
@@ -118,6 +121,14 @@ namespace LizSoundPack.Common.Hooks.Items
 						heldItem.UseSound = fireShotgun;
 					if (heldItem.UseSound == SoundID.Item40)
 						heldItem.UseSound = fireRifle;
+					if (heldItem.useAmmo == AmmoID.Bullet && heldItem.useTime > 30 && player.ChooseAmmo(heldItem).type == ItemID.HighVelocityBullet)
+						heldItem.UseSound = fireVeryStrong;
+				}
+				if (heldItem.UseSound == fireVeryStrong)
+                {
+					var vec = player.DirectionTo(Main.MouseWorld) * 16;
+					player.GetModPlayer<ScreenShakePlayer>().SetViewOffset(vec);
+					player.GetModPlayer<ScreenShakePlayer>().SetScreenShake(8);
 				}
 				Hook.Invoke(heldItem, player, ref heldItem.UseSound);
 				bool soundSwapped = heldItem.UseSound != useSoundBackup;

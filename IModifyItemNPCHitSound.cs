@@ -39,6 +39,7 @@ public class NPCDamageAudio : GlobalNPC
 	public static readonly SoundStyle HeavySlash = new SoundStyle("LizSoundPack/sounds/heavySlash") { Volume = 0.28f, PitchVariance = 0.4f, MaxInstances = 3, };
 	public static readonly SoundStyle MediumStrike = new SoundStyle("LizSoundPack/sounds/mediumStrike") { Volume = 0.5f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle LightBullet = new SoundStyle("LizSoundPack/sounds/mediumBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle HeavyBullet = new SoundStyle("LizSoundPack/sounds/heavyBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle LightMagic = new SoundStyle("LizSoundPack/sounds/lightMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle MediumMagic = new SoundStyle("LizSoundPack/sounds/mediumMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle HeavyMagic = new SoundStyle("LizSoundPack/sounds/heavyMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
@@ -235,6 +236,8 @@ public class NPCDamageAudio : GlobalNPC
 			{
 				if (globalProjectile.item.useAmmo == AmmoID.Bullet)
 					customSoundStyle = MediumGeneric;
+				if (projectile.type == ProjectileID.BulletHighVelocity)
+					customSoundStyle = HeavyBullet;
 				if (globalProjectile.item.useAmmo == AmmoID.Gel)
 					customSoundStyle = hitFire;
 				if (projectile.DamageType.Equals(DamageClass.Magic))
@@ -246,7 +249,7 @@ public class NPCDamageAudio : GlobalNPC
 						customSoundStyle = HeavyMagic;
 				}
 			}
-			if (projectile.Name.ToLower().Contains("flame") || projectile.Name.ToLower().Contains("fire"))
+			if (projectile.Name.ToLower().Contains("flam") || projectile.Name.ToLower().Contains("fire"))
 				customSoundStyle = hitFire;
 			if (projectile.Name.ToLower().Contains("ice") || projectile.Name.ToLower().Contains("frost"))
 				customSoundStyle = hitIce;
@@ -293,6 +296,39 @@ public class NPCDamageAudio : GlobalNPC
 
 					});
 				}
+			} else if (customSoundStyle == hitFire)
+            {
+				Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+				positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+				positionInWorld = npc.Center + positionInWorld;
+				var strength = 0.6f;
+				var amount = 6;
+				int dir1 = 1;
+				if (Main.rand.NextBool())
+				{
+					dir1 = -1;
+				}
+				ParticleEntity.Instantiate<FireHitParticle>(p =>
+				{
+					p.position = positionInWorld;
+					p.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir1;
+					p.scale *= strength * 1.5f;
+				});
+				for (var i = 0; i < amount; i++)
+				{
+					int dir = 1;
+					if (Main.rand.NextBool())
+					{
+						dir = -1;
+					}
+					ParticleEntity.Instantiate<FireStreakParticle>(h =>
+					{
+						h.position = positionInWorld;
+						h.scale *= strength;
+						h.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength)*dir;
+
+					});
+				}
 			}
 			else
 			{
@@ -307,7 +343,7 @@ public class NPCDamageAudio : GlobalNPC
 					}
 				);
 				}
-				if (customSoundStyle == hitWhip)
+				if (customSoundStyle == hitWhip || customSoundStyle == HeavyBullet)
 				{
 					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
 					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));

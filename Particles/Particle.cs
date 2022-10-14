@@ -34,7 +34,10 @@ namespace LizSoundPack.Content.Effects
 			
 			if (++frameCount >= frameDuration && texture != null)
 			{
-				frame.Y += texture.Height / frameMax;
+				if (texture.Height > texture.Width)
+					frame.Y += texture.Height / frameMax;
+				else 
+					frame.X += texture.Width / frameMax;
 				frameCount = 0;
 				// Or more compactly Projectile.frame = ++Projectile.frame % Main.projFrames[Projectile.type];
 				if (++frameIndex >= frameMax)
