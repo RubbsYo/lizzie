@@ -3,9 +3,11 @@ using Terraria;
 using LizSoundPack.Core.Effects;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using Terraria.ModLoader;
 
 namespace LizSoundPack.Content.Effects
 {
+	[Autoload(Side = ModSide.Client)]
 	public abstract class DustParticle : ParticleEntity
 	{
 		public const float MaxParticleDistance = 3000f;
@@ -32,6 +34,7 @@ namespace LizSoundPack.Content.Effects
 		public float rotspdDecay = 0.95f;
 		public float alphaFadeSpeed;
 		public int alphaFadeTimer;
+		public bool shatter;
 
 		public int LifeTime { get; private set; }
 
@@ -48,8 +51,41 @@ namespace LizSoundPack.Content.Effects
 				scale *= 0.95f;
             }
 			rotspd *= rotspdDecay;
+			if (shatter && Main.rand.NextBool(10))
+            {
+				Instantiate<SparkParticle>(p =>
+				{
+					p.position = position;
+					p.velocity = new Vector2((-2 + Main.rand.NextFloat(4f)), Main.rand.NextFloat(2f)) + velocity * 0.5f;
+					p.trail_set_length(4 + Main.rand.Next(4));
+					p.maxTime = 12;
+					p.gravity.Y = 0.4f;
+					p.color = new Color(62, 124, 178, 0.1f);
+					p.width = 4;
+
+				}
+						);
+			}
 			if (scale.X <= 0.08f || scale.Y <= 0.08f || alpha <= 0)
             {
+				if (shatter)
+                {
+					for (var i = 0; i < 4; i++)
+					{
+						Instantiate<SparkParticle>(p =>
+						{
+							p.position = position;
+							p.velocity = new Vector2((-2 + Main.rand.NextFloat(4f)),-2 - Main.rand.NextFloat(2f))+velocity*0.5f;
+							p.trail_set_length(4 + Main.rand.Next(4));
+							p.maxTime = 8;
+							p.gravity.Y = 0.4f;
+							p.color = new Color(62,124,178,0.1f);
+							p.width = 4;
+
+						}
+						);
+					}
+				}
 				Destroy();
             }
 			if (scale.X <= 0.8f)

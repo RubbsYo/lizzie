@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Core\DarknessSystem.cs" />
     <Compile Remove="Projectiles\GuardEffect.cs" />
     <Compile Remove="Projectiles\HitEffect.cs" />
     <Compile Remove="Projectiles\HitEffectHeavy.cs" />
@@ -20,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Content\Gores\" />
+    <Folder Include="Particles\Textures\" />
   </ItemGroup>
 </Project>

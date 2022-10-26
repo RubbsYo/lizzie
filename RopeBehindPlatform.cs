@@ -51,6 +51,48 @@ public class RopeBehindPlatform : ModSystem
 	{
         On.Terraria.Player.FindPulley += Player_FindPulley;
 
+		IL.Terraria.Main.DrawInventory += context =>
+		{
+			var cursor = new ILCursor(context);
+			while (cursor.TryGotoNext(i => i.MatchLdcI4(56)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, 50);
+			}
+			while (cursor.TryGotoNext(i => i.MatchLdcI4(58)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, 50);
+			}
+			while (cursor.TryGotoNext(i => i.MatchLdcR4(56f)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_R4, 50);
+			}
+			while (cursor.TryGotoNext(i => i.MatchLdcI4(47)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, 42);
+			}
+			while (cursor.TryGotoNext(i => i.MatchLdcI4(-47)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, -42);
+			}
+		};
+
+		IL.Terraria.UI.ChestUI.DrawSlots += context =>
+		{
+			var cursor = new ILCursor(context);
+
+			while (cursor.TryGotoNext(i => i.MatchLdcI4(56)))
+			{
+				cursor.Remove();
+				cursor.Emit(OpCodes.Ldc_I4, 50);
+			}
+
+		};
+
 		IL.Terraria.GameContent.Drawing.TileDrawing.DrawBasicTile += context =>
 		{
 			var cursor = new ILCursor(context);

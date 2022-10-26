@@ -8,14 +8,17 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class HitParticle : Particle
     {
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/HitEffect");
         public override void Init()
         {
-            texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/HitEffect");
+            texture = (Texture2D)tex;
             frameMax = 4;
             frameDuration = 3 + Main.rand.Next(2);
             frame = new Rectangle(0, 0, texture.Width, texture.Height/frameMax);

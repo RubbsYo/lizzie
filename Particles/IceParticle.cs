@@ -8,14 +8,18 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class IceParticle : DustParticle
     {
+
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/IceEffect");
         public override void Init()
         {
-            texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/IceEffect");
+            texture = (Texture2D)tex;
             frameMax = 4;
             int index = Main.rand.Next(frameMax);
             frame = new Rectangle(0, 0, texture.Width, texture.Height / frameMax);
@@ -24,6 +28,8 @@ namespace LizSoundPack.Content.Effects
             additive = false;
             color = new Color(16, 64, 255);
             shrinkspd = 0;
+            shatter = true;
+            alphaFadeSpeed = 1;
         }
     }
 }

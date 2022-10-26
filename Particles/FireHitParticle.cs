@@ -8,14 +8,18 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class FireHitParticle : Particle
     {
+
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/FireHitEffect");
         public override void Init()
         {
-            texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/FireHitEffect");
+            texture = (Texture2D)tex;
             frameMax = 9;
             frameDuration = 2 + Main.rand.Next(1);
             frame = new Rectangle(0, 0, texture.Width, texture.Height/frameMax);

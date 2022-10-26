@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using Terraria;
@@ -15,6 +16,7 @@ using Terraria.GameContent;
 using ReLogic.Content;
 using LizSoundPack.Content.Effects;
 using LizSoundPack.Core.Effects;
+using LizSoundPack.Common.TextureColors;
 
 namespace LizSoundPack.Projectiles;
 
@@ -26,16 +28,49 @@ public class ProjectileSounds : GlobalProjectile
     public Vector2 startpos;
     public int spawnTime;
     public int timer;
+    public int? ammoType;
+    public Item? ammoItem;
+    public static List<int> shotguns = new();
+    public bool isPellet;
+    public float friction;
+    public Color texColor;
+    public Projectile? inst;
+    public IEntitySource sourceToInherit;
+    public float knockbackToInherit;
+
+    public override void SetStaticDefaults()
+    {
+        shotguns.Add(ItemID.Boomstick);
+        shotguns.Add(ItemID.Shotgun);
+        shotguns.Add(ItemID.QuadBarrelShotgun);
+        shotguns.Add(ItemID.OnyxBlaster);
+        shotguns.Add(ItemID.TacticalShotgun);
+    }
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
-        if (source is EntitySource_ItemUse itemSource)
+        if (source is EntitySource_ItemUse itemSource && isPellet == false && projectile.position != new Vector2(-2845, -12491) && inst == null && sourceToInherit == null)
         {
             if (itemSource.Item.useTime < 18) 
                 juiceStrength = 0;
             if (itemSource.Item.useTime > 28)
                 juiceStrength = 2;
             item = itemSource.Item;
+            if (shotguns.Contains(item.type) && projectile.Name.ToLower().Contains("bullet") && projectile.knockBack != -8)
+            {
+                friction = 0.1f;
+                isPellet = true;
+                projectile.damage /= 2;
+                projectile.velocity *= 0.8f;
+                inst = Projectile.NewProjectileDirect(source,new Vector2(-2845,-12491),projectile.velocity.RotatedByRandom(Math.PI/8)*(Main.rand.NextFloat(0.4f)+0.8f),projectile.type,projectile.damage,-8,projectile.owner);
+                inst.GetGlobalProjectile<ProjectileSounds>().isPellet = true;
+                inst.GetGlobalProjectile<ProjectileSounds>().sourceToInherit = source;
+                inst.GetGlobalProjectile<ProjectileSounds>().knockbackToInherit = projectile.knockBack;
+                inst.position = projectile.position;
+                inst.GetGlobalProjectile<ProjectileSounds>().item = item;
+            }
+
         }
+        
         if (projectile.type == ProjectileID.BulletHighVelocity)
         {
             projectile.extraUpdates = 256;
@@ -64,6 +99,13 @@ public class ProjectileSounds : GlobalProjectile
     public override void AI(Projectile projectile)
     {
         spawnTime++;
+        if (sourceToInherit != null && projectile.knockBack == -8)
+        {
+            friction = 0.1f;
+            isPellet = true;
+            startpos = projectile.Center;
+            projectile.knockBack = knockbackToInherit;
+        }
         if (projectile.type == 933) //Zenith addendums.
         {
 
@@ -77,6 +119,28 @@ public class ProjectileSounds : GlobalProjectile
                 {
 
                 }
+            }
+        }
+        if (isPellet)
+        {
+            var frictionVector = new Vector2(friction, 0);
+            projectile.velocity -= frictionVector.RotatedBy(projectile.velocity.ToRotation());
+
+            if (projectile.velocity.Length() <= 1)
+            {
+                projectile.Kill();
+                Texture2D tex = (Texture2D)TextureAssets.Projectile[projectile.type];
+                var col = TextureColorSystem.GetBrightestColor(TextureAssets.Projectile[projectile.type]);
+                ParticleEntity.Instantiate<PelletDestroyParticle>(p =>
+                {
+                    p.position = projectile.Center;
+                    p.rotation = projectile.velocity.ToRotation();
+                    p.color = col;
+                    p.velocity = projectile.velocity;
+                    p.scale = new Vector2((float)tex.Height / 20, 1);
+                    p.scale = new Vector2(1, 1);
+                    //p.friction = frictionVector;
+                });
             }
         }
         if (projectile.type == ProjectileID.BulletHighVelocity)
@@ -106,6 +170,8 @@ public class ProjectileRicochet : GlobalProjectile
     public static readonly SoundStyle iceHitWall = new SoundStyle("LizSoundPack/sounds/iceHitWall") { Volume = 0.5f, PitchVariance = 0.25f, };
     public static readonly SoundStyle swingZenith = new SoundStyle("LizSoundPack/sounds/swingZenith") { Volume = 0.2f, PitchVariance = 0.4f, MaxInstances = 3,};
     public static Asset<Texture2D> Bullet1Flash = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/BulletFlash");
+    public static Asset<Texture2D> Pellet = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/Pellet");
+    public static Asset<Texture2D> PelletBright = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/PelletBright");
 
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
@@ -120,6 +186,35 @@ public class ProjectileRicochet : GlobalProjectile
         {
             SoundEngine.PlaySound(iceHitWall, projectile.Center);
         }
+        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
+        {
+            var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
+            // If the projectile hits the left or right side of the tile, reverse the X velocity
+            if (Math.Abs(projectile.velocity.X - oldVelocity.X) > float.Epsilon)
+            {
+                projectile.velocity.X = -oldVelocity.X;
+            }
+
+            // If the projectile hits the top or bottom side of the tile, reverse the Y velocity
+            if (Math.Abs(projectile.velocity.Y - oldVelocity.Y) > float.Epsilon)
+            {
+                projectile.velocity.Y = -oldVelocity.Y;
+            }
+            projectile.velocity *= 0.8f;
+            if (projectile.type == ProjectileID.BulletHighVelocity)
+            {
+                float dist = inst.startpos.Distance(projectile.Center);
+                ParticleEntity.Instantiate<TracerParticle>(h =>
+                {
+                    h.position = inst.startpos;
+                    h.scale.X *= dist;
+                    h.rotation = inst.startpos.DirectionTo(projectile.Center).ToRotation();
+                });
+                inst.startpos = projectile.position;
+                return false;
+            }
+            return false;
+        }
 
         return true;
     }
@@ -131,8 +226,9 @@ public class ProjectileRicochet : GlobalProjectile
 
     public override bool PreDraw(Projectile projectile, ref Color lightColor)
     {
-        if (projectile.type == ProjectileID.Bullet)
-        {
+           
+        if (projectile.type == ProjectileID.Bullet && projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
+        { 
             var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
             var sb = Main.spriteBatch;
             var trans = Main.GameViewMatrix != null ? Main.GameViewMatrix.TransformationMatrix : Matrix.Identity;
@@ -146,7 +242,8 @@ public class ProjectileRicochet : GlobalProjectile
                 sb.Draw(tex, projectile.Center - Main.screenPosition, null, lightColor, projectile.rotation, tex.Size() / 2, 1, SpriteEffects.None, 0);
                 sb.Draw(tex, projectile.Center - Main.screenPosition, null, new Color(25, 25, 25), projectile.rotation, tex.Size() / 2, 2, SpriteEffects.None, 0);
             }
-            else {
+            else
+            {
                 var item = projectile.GetGlobalProjectile<ProjectileSounds>().item;
                 if (item != null)
                 {
@@ -167,8 +264,55 @@ public class ProjectileRicochet : GlobalProjectile
                 }
             }
         }
+
         if (projectile.type == ProjectileID.BulletHighVelocity)
             return false;
+
+        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
+        {
+            var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
+            var sb = Main.spriteBatch;
+            var trans = Main.GameViewMatrix != null ? Main.GameViewMatrix.TransformationMatrix : Matrix.Identity;
+            sb.End();
+            sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.Identity);
+            Texture2D tex = (Texture2D)TextureAssets.Projectile[projectile.type];
+            Texture2D bulletTex = (Texture2D)Pellet;
+            Texture2D bulletBrightTex = (Texture2D)PelletBright;
+            var col = TextureColorSystem.GetBrightestColor(TextureAssets.Projectile[projectile.type]);
+            projectile.Size = new Vector2(8, 8);
+            var origin = new Vector2(6, 24);
+            var scale = new Vector2(1, 1);
+            if (tex.Width < 8 || tex.Height < 8)
+            { 
+                sb.Draw(bulletTex, projectile.Center - Main.screenPosition, null, col, projectile.rotation, bulletTex.Size() / 2, scale, SpriteEffects.None, 0);
+                sb.Draw(bulletBrightTex, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, bulletTex.Size() / 2, scale, SpriteEffects.None, 0);
+                sb.Draw(bulletTex, projectile.Center - Main.screenPosition, null, new Color(15, 15, 15).MultiplyRGB(col), projectile.rotation, bulletTex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0);
+                sb.Draw(bulletBrightTex, projectile.Center - Main.screenPosition, null, new Color(15, 15, 15), projectile.rotation, bulletTex.Size() / 2, scale * 1.5f, SpriteEffects.None, 0);
+            }
+        }
+
+        if (projectile.hostile)
+        {
+            var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
+            var sb = Main.spriteBatch;
+            var trans = Main.GameViewMatrix != null ? Main.GameViewMatrix.TransformationMatrix : Matrix.Identity;
+            sb.End();
+            sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.Identity);
+            Texture2D tex = (Texture2D)TextureAssets.Projectile[projectile.type];
+            var frame = new Rectangle(0, 0, tex.Width, tex.Height / TextureAssets.Projectile[projectile.type].Value.Height);
+            //the red of the projectile
+            for (var i = 0; i < 8; i++)
+            {
+                var rand = new Vector2(Main.rand.Next(-4, 5), Main.rand.Next(-4, 5));
+                
+                sb.Draw(tex, projectile.Center - Main.screenPosition + rand, frame, new Color(255,0,0,255), projectile.rotation, tex.Size() / 2, 1, SpriteEffects.None, 0);
+            }
+            //the center of the projectile
+            for (var i = 0; i < 2; i++)
+            {
+                sb.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, tex.Size() / 2, 1, SpriteEffects.None, 0);
+            }
+        }    
         return true;
     }
 }
@@ -183,7 +327,7 @@ public class PopBullet : ModProjectile
     }
     public static Asset<Texture2D> PopBulletFlash = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/PopBulletFlash");
     public static bool canDupe = true;
-    public static Projectile child;
+    public static Projectile? child;
 
     public override void SetDefaults()
     {
@@ -249,7 +393,8 @@ public class PopBullet : ModProjectile
         var friction = Projectile.velocity;
         friction.Normalize();
         friction *= 0.2f;
-        child.damage = Projectile.damage;
+        if (child != null)
+            child.damage = Projectile.damage;
         Projectile.velocity -= friction;
         if (Projectile.velocity.Length() < 2)
         {
@@ -295,7 +440,7 @@ public class PopBullet : ModProjectile
 
     public class PopBulletSplit : PopBullet
     {
-        public static bool canDupe = false;
+        //public static bool canDupe = false;
         public override void OnSpawn(IEntitySource source)
         {
             //Nothing.

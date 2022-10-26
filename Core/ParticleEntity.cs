@@ -21,7 +21,8 @@ namespace LizSoundPack.Core.Effects
 
 		public bool additive = true;
 
-		public virtual void Load(Mod mod) { }
+		public virtual void Load(Mod mod) { 
+		}
 
 		public virtual void Unload() { }
 

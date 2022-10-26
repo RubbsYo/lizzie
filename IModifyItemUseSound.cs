@@ -29,15 +29,32 @@ namespace LizSoundPack.Common.Hooks.Items
 
 	internal sealed class ModifyItemUseSoundImplementation : GlobalItem
 	{
-		public static readonly SoundStyle swingSharpS = new SoundStyle("LizSoundPack/sounds/swingSharpS") { Volume = 0.19f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingSharpM = new SoundStyle("LizSoundPack/sounds/swingSharpM") { Volume = 0.19f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingSharpL = new SoundStyle("LizSoundPack/sounds/swingSharpL") { Volume = 0.19f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingThrowS = new SoundStyle("LizSoundPack/sounds/swingThrowS") { Volume = 0.35f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingThrowM = new SoundStyle("LizSoundPack/sounds/swingThrowM") { Volume = 0.25f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingThrowL = new SoundStyle("LizSoundPack/sounds/swingThrowL") { Volume = 0.35f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingPoleS = new SoundStyle("LizSoundPack/sounds/swingPoleS") { Volume = 0.2f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingPoleM = new SoundStyle("LizSoundPack/sounds/swingPoleM") { Volume = 0.2f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingPoleL = new SoundStyle("LizSoundPack/sounds/swingPoleL") { Volume = 0.2f, PitchVariance = 0.25f, };
+		public static SoundStyle[] loadSoundStrengthSet(string filename, float volume)
+		{
+			SoundStyle[] array = new SoundStyle[3];
+			string[] suffixes = { "S", "M", "L" };
+			for(var i = 0; i <= 2; i++)
+            {
+				array[i] = new SoundStyle("LizSoundPack/sounds/" + filename + suffixes[i]);
+				array[i].Volume = volume;
+				array[i].PitchVariance = 0.25f;
+			}
+			return array;
+		}
+
+		public static SoundStyle SetSoundStrength(float indexer, float mediumPoint, float heavyPoint, SoundStyle[] strengthSet)
+        {
+			var index = 0;
+			if (indexer > mediumPoint)
+				index = 1;
+			if (indexer > heavyPoint)
+				index = 2;
+			return strengthSet[index];
+        }
+		public static readonly SoundStyle[] swingSharp = loadSoundStrengthSet("swingSharp", 0.19f);
+		public static readonly SoundStyle[] swingThrow = loadSoundStrengthSet("swingThrow", 0.35f);
+		public static readonly SoundStyle[] swingPole = loadSoundStrengthSet("swingPole", 0.35f);
+		public static readonly SoundStyle[] swingBow = loadSoundStrengthSet("swingBow", 0.4f);
 		public static readonly SoundStyle swingFireS = new SoundStyle("LizSoundPack/sounds/swingFireLight") { Volume = 0.4f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle swingFireL = new SoundStyle("LizSoundPack/sounds/swingFire") { Volume = 0.3f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle swingIce = new SoundStyle("LizSoundPack/sounds/swingIce") { Volume = 0.6f, PitchVariance = 0.25f, };
@@ -46,6 +63,7 @@ namespace LizSoundPack.Common.Hooks.Items
 		public static readonly SoundStyle fireMachinegun = new SoundStyle("LizSoundPack/sounds/fireMachinegun") { Volume = 0.3f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle fireRifle = new SoundStyle("LizSoundPack/sounds/fireRifle") { Volume = 0.3f, PitchVariance = 0.25f, };
 		public static readonly SoundStyle fireVeryStrong = new SoundStyle("LizSoundPack/sounds/fireVeryStrong") { Volume = 0.4f, PitchVariance = 0.25f, };
+
 		public override void Load()
 		{
 			On.Terraria.Player.ItemCheck_StartActualUse += (orig, player, item) =>
@@ -66,36 +84,16 @@ namespace LizSoundPack.Common.Hooks.Items
 						if (heldItem.noUseGraphic)
 						{
 							if (config.enableThrowSounds)
-							{
-								if (heldItem.useTime < 15)
-									heldItem.UseSound = swingThrowS;
-								else if (heldItem.useTime < 30)
-									heldItem.UseSound = swingThrowM;
-								else
-									heldItem.UseSound = swingThrowL;
-							}
+								heldItem.UseSound = SetSoundStrength(heldItem.useTime, 15, 30, swingThrow);
 						}
 						else if (config.enableMeleeSounds)
 						{
-							if (heldItem.useTime < 15)
-								heldItem.UseSound = swingSharpS;
-							else if (heldItem.useTime < 30)
-								heldItem.UseSound = swingSharpM;
-							else
-								heldItem.UseSound = swingSharpL;
+							heldItem.UseSound = SetSoundStrength(heldItem.useTime, 15, 30, swingSharp);
 						}
-
 					}
 					
 					if (heldItem.useStyle == ItemUseStyleID.Shoot && heldItem.DamageType.Equals(DamageClass.Melee) && config.enableSpearSounds)
-					{
-						if (heldItem.useTime < 26)
-							heldItem.UseSound = swingPoleL;
-						else if (heldItem.useTime < 30)
-							heldItem.UseSound = swingPoleM;
-						else
-							heldItem.UseSound = swingPoleS;
-					}
+						heldItem.UseSound = SetSoundStrength(heldItem.useTime, 26, 30, swingPole);
 				}
 				if (heldItem.Name.ToLower().Contains("fire") || heldItem.Name.ToLower().Contains("fiery") || heldItem.Name.ToLower().Contains("flam") || heldItem.Name.ToLower().Contains("sun"))
 				{
@@ -108,11 +106,15 @@ namespace LizSoundPack.Common.Hooks.Items
 					}
 				}
 				if (heldItem.Name.ToLower().Contains("ice") || heldItem.Name.ToLower().Contains("frost"))
-				{
 					heldItem.UseSound = swingIce;
-				}
 				if (config.enableGunSounds)
 				{
+					//putting bow stuff here too for now
+					if (heldItem.useAmmo == AmmoID.Arrow)
+                    {
+						var strength = (heldItem.useTime / 7 + heldItem.shootSpeed / 4);
+						heldItem.UseSound = SetSoundStrength(strength, 5.1f, 5.5f, swingBow);
+					}
 					if (heldItem.UseSound == SoundID.Item41)
 						heldItem.UseSound = firePistol;
 					if (heldItem.UseSound == SoundID.Item11 || heldItem.UseSound == SoundID.Item31)
@@ -124,6 +126,7 @@ namespace LizSoundPack.Common.Hooks.Items
 					if (heldItem.useAmmo == AmmoID.Bullet && heldItem.useTime > 30 && player.ChooseAmmo(heldItem).type == ItemID.HighVelocityBullet)
 						heldItem.UseSound = fireVeryStrong;
 				}
+
 				if (heldItem.UseSound == fireVeryStrong)
                 {
 					var vec = player.DirectionTo(Main.MouseWorld) * 16;
@@ -136,7 +139,7 @@ namespace LizSoundPack.Common.Hooks.Items
 
 
 				orig(player, item);
-
+				heldItem.UseSound = useSoundBackup;
 			};
 		}
 	}

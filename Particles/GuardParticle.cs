@@ -11,11 +11,13 @@ using LizSoundPack.Content.Effects;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class GuardParticle : Particle
     {
+        private static Texture2D tex = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/GuardEffect");
         public override void Init()
         {
-            texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/GuardEffect");
+            texture = tex;
             frameMax = 10;
             frameDuration = 3 + Main.rand.Next(2);
             frame = new Rectangle(0, 0, texture.Width-1, texture.Height/frameMax);

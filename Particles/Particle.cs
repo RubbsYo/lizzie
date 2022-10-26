@@ -2,9 +2,12 @@
 using Terraria;
 using LizSoundPack.Core.Effects;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria.ModLoader;
+using LizSoundPack;
 
 namespace LizSoundPack.Content.Effects
 {
+	[Autoload(Side = ModSide.Client)]
 	public abstract class Particle : ParticleEntity
 	{
 		public const float MaxParticleDistance = 3000f;
@@ -45,6 +48,7 @@ namespace LizSoundPack.Content.Effects
 			}
 			velocity += gravity;
 			velocity -= friction;
+
 
 			position += velocity * velocityScale;
 			LifeTime++;

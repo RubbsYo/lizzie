@@ -24,9 +24,9 @@ namespace LizSoundPack.Core.Effects
 			entitiesByType?.Clear();
 		}
 
-		public override void PreUpdateEntities() => UpdateEntities();
+        public override void PreUpdateEntities() => UpdateEntities();
 
-		public static IEnumerable<ParticleEntity> EnumerateEntities()
+        public static IEnumerable<ParticleEntity> EnumerateEntities()
 		{
 			foreach (var entities in entitiesByType.Values)
 			{
@@ -78,11 +78,16 @@ namespace LizSoundPack.Core.Effects
 			{
 				return;
 			}
-
-			foreach (var entity in EnumerateEntities())
+			try
 			{
-				entity.Update();
-			}
+				foreach (var entity in EnumerateEntities())
+				{
+					entity.Update();
+				}
+			} catch(System.InvalidOperationException)
+            {
+				//just shit myself i guess idk
+            }
 		}
 
 		private static void DrawEntities()

@@ -8,17 +8,22 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class MagicParticle : Particle
     {
         public bool alt;
+
+        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffect");
+        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffectAlt");
         public override void Init()
         {
             if (!alt)
             {
-                texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/MagicEffect");
+                texture = (Texture2D)tex1;
                 frameMax = 8;
                 frameDuration = 1 + Main.rand.Next(2);
                 frame = new Rectangle(0, 0, texture.Width, texture.Height / frameMax);
@@ -28,7 +33,7 @@ namespace LizSoundPack.Content.Effects
             else
             {
                 {
-                    texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/MagicEffectAlt");
+                    texture = (Texture2D)tex2;
                     frameMax = 9;
                     frameDuration = 1 + Main.rand.Next(2);
                     frame = new Rectangle(0, 0, texture.Width, texture.Height / frameMax);

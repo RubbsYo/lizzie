@@ -179,6 +179,18 @@ public class NPCDamageAudio : GlobalNPC
 						}
 						);
 					}
+					for (var i = 0; i < 6*strength; i++)
+					{
+						ParticleEntity.Instantiate<SparkParticle>(p =>
+						{
+							p.position = positionInWorld;
+							p.velocity = new Vector2(-player.direction * (4 + Main.rand.NextFloat(4f)), -4 - Main.rand.NextFloat(4f)) * strength*2;
+							p.color = new Color(255,221,0);
+							p.trail_set_length(7 + Main.rand.Next(4));
+							p.maxTime = (int)((10 + Main.rand.Next(8)));
+						}
+						);
+					}
 					for (var i = 0; i < 6 * strength; i++)
 					{
 						int dir = 1;

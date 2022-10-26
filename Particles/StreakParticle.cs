@@ -8,17 +8,23 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
+    [Autoload(Side = ModSide.Client)]
     public class StreakParticle : Particle
     {
         public bool alt;
+
+        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect");
+        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect2");
+
         public override void Init()
         {
             if (!alt)
             {
-                texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/StreakEffect");
+                texture = (Texture2D)tex1;
                 frameMax = 7;
                 frameDuration = 2 + Main.rand.Next(2);
                 frame = new Rectangle(0, 0, texture.Width - 1, texture.Height / frameMax);
@@ -27,7 +33,7 @@ namespace LizSoundPack.Content.Effects
                 scale.Y *= 2 + Main.rand.NextFloat(0.3f);
             } else
             {
-                texture = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/StreakEffect2");
+                texture = (Texture2D)tex2;
                 frameMax = 5;
                 frameDuration = 2 + Main.rand.Next(2);
                 frame = new Rectangle(0, 0, texture.Width - 1, texture.Height / frameMax);
