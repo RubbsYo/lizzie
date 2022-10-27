@@ -15,7 +15,7 @@ namespace LizSoundPack.Content.Effects
     [Autoload(Side = ModSide.Client)]
     public class FireStreakParticle : Particle
     {
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/FireStreakEffect");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/FireStreakEffect", AssetRequestMode.ImmediateLoad);
 
         public override void Init()
         {

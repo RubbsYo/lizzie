@@ -15,7 +15,7 @@ namespace LizSoundPack.Content.Effects
     [Autoload(Side = ModSide.Client)]
     public class HitParticleHeavy : Particle
     {
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/HitEffectHeavy");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/HitEffectHeavy", AssetRequestMode.ImmediateLoad);
 
         public override void Init()
         {

@@ -57,7 +57,7 @@ public class ProjectileSounds : GlobalProjectile
             item = itemSource.Item;
             if (shotguns.Contains(item.type) && projectile.Name.ToLower().Contains("bullet") && projectile.knockBack != -8)
             {
-                friction = 0.1f;
+                friction = (projectile.velocity.Length() * Main.rand.NextFloat(0.01f, 0.03f)) / projectile.extraUpdates;
                 isPellet = true;
                 projectile.damage /= 2;
                 projectile.velocity *= 0.8f;
@@ -101,7 +101,8 @@ public class ProjectileSounds : GlobalProjectile
         spawnTime++;
         if (sourceToInherit != null && projectile.knockBack == -8)
         {
-            friction = 0.1f;
+            
+            friction = (projectile.velocity.Length()*Main.rand.NextFloat(0.01f,0.03f))/projectile.extraUpdates;
             isPellet = true;
             startpos = projectile.Center;
             projectile.knockBack = knockbackToInherit;
@@ -128,7 +129,6 @@ public class ProjectileSounds : GlobalProjectile
 
             if (projectile.velocity.Length() <= 1)
             {
-                projectile.Kill();
                 Texture2D tex = (Texture2D)TextureAssets.Projectile[projectile.type];
                 var col = TextureColorSystem.GetBrightestColor(TextureAssets.Projectile[projectile.type]);
                 ParticleEntity.Instantiate<PelletDestroyParticle>(p =>
@@ -141,6 +141,7 @@ public class ProjectileSounds : GlobalProjectile
                     p.scale = new Vector2(1, 1);
                     //p.friction = frictionVector;
                 });
+                projectile.Kill();
             }
         }
         if (projectile.type == ProjectileID.BulletHighVelocity)
@@ -200,7 +201,22 @@ public class ProjectileRicochet : GlobalProjectile
             {
                 projectile.velocity.Y = -oldVelocity.Y;
             }
+
             projectile.velocity *= 0.8f;
+            for (int i = 0; i < 3; i++)
+            {
+                ParticleEntity.Instantiate<DustCloudParticle>(p =>
+                {
+                    p.position = projectile.position;
+                    p.velocity = new Vector2(projectile.velocity.X * Main.rand.NextFloat(0.3f, 0.7f), projectile.velocity.Y * Main.rand.NextFloat(0.3f, 0.7f));
+                    p.rotation = Main.rand.NextFloat((float)Math.PI);
+                    p.scale *= Main.rand.NextFloat(1, 1.3f);
+                    p.rotspd = 0.1f;
+                    p.rotspdDecay = 1.01f;
+                    p.shrinkspd = 0.04f;
+
+                });
+            }
             if (projectile.type == ProjectileID.BulletHighVelocity)
             {
                 float dist = inst.startpos.Distance(projectile.Center);

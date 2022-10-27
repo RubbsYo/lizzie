@@ -10,6 +10,7 @@ using System;
 using LizSoundPack.Content.Effects;
 using LizSoundPack.Core.Effects;
 using ReLogic.Content;
+using LizSoundPack.Common.TextureColors;
 
 namespace LizSoundPack.Content.Effects
 {
@@ -17,7 +18,7 @@ namespace LizSoundPack.Content.Effects
     public class FireParticle : DustParticle
     {
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/FireEffect");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/FireEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = (Texture2D)tex;

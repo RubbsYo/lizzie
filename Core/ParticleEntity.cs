@@ -7,7 +7,7 @@ namespace LizSoundPack.Core.Effects
 	// There is nothing that exists in vanilla that does what I want to do. I am sorry to Mirsario and shamelessly stealing his work
 	public class ParticleEntity : ILoadable
 	{
-		public bool Destroyed { get; private set; }
+		public bool Destroyed = true;
 
 		public void Destroy(bool allowEffects = false)
 		{

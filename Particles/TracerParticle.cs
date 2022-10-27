@@ -17,7 +17,7 @@ namespace LizSoundPack.Content.Effects
     {
         float shrinkspd = 0.8f;
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/TracerEffect");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/TracerEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = (Texture2D)tex;

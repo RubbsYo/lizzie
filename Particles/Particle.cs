@@ -14,6 +14,7 @@ namespace LizSoundPack.Content.Effects
 		public const float MaxParticleDistanceSqr = MaxParticleDistance * MaxParticleDistance;
 
 		public float alpha = 1f;
+		
 		public float rotation;
 		public Vector2 position;
 		public Vector2 velocity;
@@ -21,6 +22,7 @@ namespace LizSoundPack.Content.Effects
 		public Vector2 scale = Vector2.One;
 		public Vector2 gravity = new(0f, 0f);
 		public Vector2 friction;
+		public float velocityDecay = 1;
 		public Color color = Color.White;
 		public Texture2D? texture;
 		public Rectangle frame;
@@ -48,6 +50,7 @@ namespace LizSoundPack.Content.Effects
 			}
 			velocity += gravity;
 			velocity -= friction;
+			velocity *= velocityDecay;
 
 
 			position += velocity * velocityScale;

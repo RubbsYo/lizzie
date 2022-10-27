@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria.Audio;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.GameContent;
 using LizSoundPack.Core.Time;
+using ReLogic.Content;
 
 namespace LizSoundPack.Common.ModEntities.NPCs
 {
@@ -25,7 +27,10 @@ namespace LizSoundPack.Common.ModEntities.NPCs
 		public bool highDefense;
 		public int lastLife;
 
+		//public static Asset<Effect> spriteEffect = ModContent.Request<Effect>("Shader/fillWhite");
+
 		public override bool InstancePerEntity => true;
+
 
 		public override void OnHitByItem(NPC npc, Player player, Item item, int damage, float knockback, bool crit)
 			=> ResetHitTime(npc, damage, knockback, item.DamageType);

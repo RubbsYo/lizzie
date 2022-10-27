@@ -52,6 +52,7 @@ namespace LizSoundPack.Common.Hooks.Items
 			return strengthSet[index];
         }
 		public static readonly SoundStyle[] swingSharp = loadSoundStrengthSet("swingSharp", 0.19f);
+		public static readonly SoundStyle[] swingSharp2 = loadSoundStrengthSet("swingSharp2", 0.19f);
 		public static readonly SoundStyle[] swingThrow = loadSoundStrengthSet("swingThrow", 0.35f);
 		public static readonly SoundStyle[] swingPole = loadSoundStrengthSet("swingPole", 0.35f);
 		public static readonly SoundStyle[] swingBow = loadSoundStrengthSet("swingBow", 0.4f);
@@ -77,7 +78,18 @@ namespace LizSoundPack.Common.Hooks.Items
 				}
 				var config = SoundPackConfig.Instance;
 				var useSoundBackup = heldItem.UseSound;
-				if (heldItem.UseSound == SoundID.Item1)
+				bool soundIsModded = false;
+				bool resetSound = false;
+				for (int i = 0; i <= 2; i++)
+                {
+					if (useSoundBackup == swingSharp[i]
+					|| useSoundBackup == swingSharp2[i]
+					|| useSoundBackup == swingThrow[i] 
+					|| useSoundBackup == swingPole[i] 
+					|| useSoundBackup == swingBow[i])
+						soundIsModded = true;
+                }
+				if (heldItem.UseSound == SoundID.Item1 || soundIsModded)
 				{
 					if (heldItem.useStyle == ItemUseStyleID.Swing)
 					{
@@ -88,7 +100,12 @@ namespace LizSoundPack.Common.Hooks.Items
 						}
 						else if (config.enableMeleeSounds)
 						{
-							heldItem.UseSound = SetSoundStrength(heldItem.useTime, 15, 30, swingSharp);
+							float num = heldItem.useTime;
+							if (heldItem.useAnimation < heldItem.useTime)
+								num = heldItem.useAnimation;
+							num /= player.GetWeaponAttackSpeed(heldItem);
+							Main.NewText(num);
+							heldItem.UseSound = SetSoundStrength(num, 15, 25, Main.rand.NextBool() ? swingSharp : swingSharp2);
 						}
 					}
 					
@@ -124,7 +141,10 @@ namespace LizSoundPack.Common.Hooks.Items
 					if (heldItem.UseSound == SoundID.Item40)
 						heldItem.UseSound = fireRifle;
 					if (heldItem.useAmmo == AmmoID.Bullet && heldItem.useTime > 30 && player.ChooseAmmo(heldItem).type == ItemID.HighVelocityBullet)
+					{
 						heldItem.UseSound = fireVeryStrong;
+						resetSound = true;
+					}
 				}
 
 				if (heldItem.UseSound == fireVeryStrong)
@@ -139,7 +159,10 @@ namespace LizSoundPack.Common.Hooks.Items
 
 
 				orig(player, item);
-				heldItem.UseSound = useSoundBackup;
+				if (resetSound)
+                {
+					heldItem.UseSound = useSoundBackup;
+                }
 			};
 		}
 	}

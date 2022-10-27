@@ -8,13 +8,14 @@ using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
 using LizSoundPack.Content.Effects;
+using ReLogic.Content;
 
 namespace LizSoundPack.Content.Effects
 {
     [Autoload(Side = ModSide.Client)]
     public class GuardParticle : Particle
     {
-        private static Texture2D tex = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/GuardEffect");
+        private static Texture2D tex = (Texture2D)ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/GuardEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = tex;

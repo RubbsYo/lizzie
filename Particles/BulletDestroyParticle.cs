@@ -16,7 +16,7 @@ namespace LizSoundPack.Content.Effects
     public class BulletDestroyParticle : Particle
     {
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/BulletDestroyEffect");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/BulletDestroyEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = (Texture2D)tex;

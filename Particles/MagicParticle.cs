@@ -17,8 +17,8 @@ namespace LizSoundPack.Content.Effects
     {
         public bool alt;
 
-        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffect");
-        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffectAlt");
+        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffect", AssetRequestMode.ImmediateLoad);
+        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/MagicEffectAlt", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             if (!alt)

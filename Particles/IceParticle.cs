@@ -16,7 +16,7 @@ namespace LizSoundPack.Content.Effects
     public class IceParticle : DustParticle
     {
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/IceEffect");
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/IceEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = (Texture2D)tex;

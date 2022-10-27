@@ -21,6 +21,7 @@ namespace LizSoundPack.Content.Effects
 		public Vector2 scale = Vector2.One;
 		public Vector2 gravity = new(0f, 0f);
 		public Vector2 friction;
+		public float velocityDecay = 1;
 		public Color color = Color.White;
 		public Texture2D? texture;
 		public Rectangle frame;
@@ -44,6 +45,7 @@ namespace LizSoundPack.Content.Effects
 			velocity.X = Utilities.approachF(velocity.X, 0, Math.Abs(friction.X));
 			if (gravity.Y == 0f)
 				velocity.Y = Utilities.approachF(velocity.Y, 0, Math.Abs(friction.Y));
+			velocity *= velocityDecay;
 			scale -= new Vector2(shrinkspd,shrinkspd);
 			rotation += rotspd;
 			if (scale.X >= 1.5f)
@@ -51,23 +53,9 @@ namespace LizSoundPack.Content.Effects
 				scale *= 0.95f;
             }
 			rotspd *= rotspdDecay;
-			if (shatter && Main.rand.NextBool(10))
-            {
-				Instantiate<SparkParticle>(p =>
-				{
-					p.position = position;
-					p.velocity = new Vector2((-2 + Main.rand.NextFloat(4f)), Main.rand.NextFloat(2f)) + velocity * 0.5f;
-					p.trail_set_length(4 + Main.rand.Next(4));
-					p.maxTime = 12;
-					p.gravity.Y = 0.4f;
-					p.color = new Color(62, 124, 178, 0.1f);
-					p.width = 4;
-
-				}
-						);
-			}
 			if (scale.X <= 0.08f || scale.Y <= 0.08f || alpha <= 0)
             {
+				//this is mainly used for ice
 				if (shatter)
                 {
 					for (var i = 0; i < 4; i++)

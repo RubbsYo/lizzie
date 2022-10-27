@@ -34,7 +34,7 @@ public interface IModifyItemNPCHitSound
 
 public class NPCDamageAudio : GlobalNPC
 {
-	public static readonly SoundStyle LightSlash = new SoundStyle("LizSoundPack/sounds/lightSlash") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle LightSlash = new SoundStyle("LizSoundPack/sounds/lightSlash2") { Volume = 0.4f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle MediumSlash = new SoundStyle("LizSoundPack/sounds/mediumSlash_4") { Volume = 0.3f, PitchVariance = 0.25f, MaxInstances = 3, };
 	public static readonly SoundStyle HeavySlash = new SoundStyle("LizSoundPack/sounds/heavySlash") { Volume = 0.28f, PitchVariance = 0.4f, MaxInstances = 3, };
 	public static readonly SoundStyle MediumStrike = new SoundStyle("LizSoundPack/sounds/mediumStrike") { Volume = 0.5f, PitchVariance = 0.25f, };

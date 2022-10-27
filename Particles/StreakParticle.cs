@@ -17,8 +17,8 @@ namespace LizSoundPack.Content.Effects
     {
         public bool alt;
 
-        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect");
-        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect2");
+        private static Asset<Texture2D> tex1 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect", AssetRequestMode.ImmediateLoad);
+        private static Asset<Texture2D> tex2 = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/StreakEffect2", AssetRequestMode.ImmediateLoad);
 
         public override void Init()
         {
