@@ -50,8 +50,8 @@ namespace LizSoundPack.Content.Effects
 
         public override void Draw(SpriteBatch sb)
         {
-            //base.Draw(sb);
-            if (texture != null)
+            base.Draw(sb);
+            if (texture != null && additive)
             {
                 for (var j = 0; j < 7; j++)
                 {

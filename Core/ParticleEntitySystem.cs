@@ -9,18 +9,21 @@ namespace LizSoundPack.Core.Effects
 	public class ParticleEntitySystem : ModSystem
 	{
 		private static Dictionary<Type, LinkedList<ParticleEntity>> entitiesByType = new();
-		public static ParticleEntity[] particleEntities = new ParticleEntity[2001];
+		public static ParticleEntity[] particleEntities = new ParticleEntity[6001];
 		private static int particleIndex;
 
 		public override void Load()
 		{
 			On.Terraria.Main.DrawProjectiles += (orig, self) => {
+				DrawBackEntities();
+				
 				orig(self);
 
-				DrawEntities();
+				DrawFrontEntities();
 			};
 
-			for(int i = 0; i < particleEntities.Length-1; i++)
+
+			for (int i = 0; i < particleEntities.Length; i++)
             {
 				particleEntities[i] = new ParticleEntity();
             }
@@ -77,13 +80,14 @@ namespace LizSoundPack.Core.Effects
 			list.AddLast(instance);*/
 			while (!particleEntities[particleIndex].Destroyed)
 				particleIndex++;
+			if (particleIndex >= particleEntities.Length - 2)
+				particleIndex = 0;
 			preinitializer?.Invoke(instance);
 			particleEntities[particleIndex] = instance;
 			particleEntities[particleIndex].Destroyed = false;
 			particleEntities[particleIndex].Init();
 
-			if (particleIndex >= entitiesByType.Count)
-				particleIndex = 0;
+			
 
 			return instance;
 		}
@@ -109,16 +113,16 @@ namespace LizSoundPack.Core.Effects
 			}
 		}
 
-		private static void DrawEntities()
+		private static void DrawFrontEntities()
 		{
 			var sb = Main.spriteBatch;
 
-			sb.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.EffectMatrix);
+			sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.EffectMatrix);
 
 			for (int i = 0; i < particleEntities.Length - 1; i++)
 			{
 
-				if (!particleEntities[i].Destroyed)
+				if (!particleEntities[i].Destroyed && !particleEntities[i].back)
 				{
 					if (!particleEntities[i].additive)
 						particleEntities[i].Draw(sb);
@@ -131,7 +135,7 @@ namespace LizSoundPack.Core.Effects
 
 			for (int i = 0; i < particleEntities.Length - 1; i++)
 			{
-				if (!particleEntities[i].Destroyed)
+				if (!particleEntities[i].Destroyed && !particleEntities[i].back)
 				{
 
 					if (particleEntities[i].additive)
@@ -141,10 +145,42 @@ namespace LizSoundPack.Core.Effects
 					}
 				}
 			}
+			sb.End();
+		}
+
+		private static void DrawBackEntities()
+		{
+			var sb = Main.spriteBatch;
+
+			sb.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.EffectMatrix);
+
+			for (int i = 0; i < particleEntities.Length - 1; i++)
+			{
+
+				if (!particleEntities[i].Destroyed && particleEntities[i].back)
+				{
+					if (!particleEntities[i].additive)
+						particleEntities[i].Draw(sb);
+				}
+			}
 
 			sb.End();
 
+			sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Main.GameViewMatrix.EffectMatrix);
 
+			for (int i = 0; i < particleEntities.Length - 1; i++)
+			{
+				if (!particleEntities[i].Destroyed && particleEntities[i].back)
+				{
+
+					if (particleEntities[i].additive)
+					{
+
+						particleEntities[i].Draw(sb);
+					}
+				}
+			}
+			sb.End();
 		}
 	}
 }

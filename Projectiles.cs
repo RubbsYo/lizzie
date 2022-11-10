@@ -37,6 +37,7 @@ public class ProjectileSounds : GlobalProjectile
     public Projectile? inst;
     public IEntitySource sourceToInherit;
     public float knockbackToInherit;
+    private bool soundIsPlayed;
 
     public override void SetStaticDefaults()
     {
@@ -48,6 +49,7 @@ public class ProjectileSounds : GlobalProjectile
     }
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
+        var config = SoundPackConfig.Instance;
         if (source is EntitySource_ItemUse itemSource && isPellet == false && projectile.position != new Vector2(-2845, -12491) && inst == null && sourceToInherit == null)
         {
             if (itemSource.Item.useTime < 18) 
@@ -55,7 +57,35 @@ public class ProjectileSounds : GlobalProjectile
             if (itemSource.Item.useTime > 28)
                 juiceStrength = 2;
             item = itemSource.Item;
-            if (shotguns.Contains(item.type) && projectile.Name.ToLower().Contains("bullet") && projectile.knockBack != -8)
+            if (projectile.aiStyle == ProjAIStyleID.Spear && config.enableSpearRework)
+            {
+                if (item != null)
+                {
+                    timer++;
+                    Player player = Main.player[projectile.owner];
+                    ItemID.Sets.SkipsInitialUseSound[item.type] = true;
+                    var threshhold = item.useTime / 2;
+                    projectile.friendly = false;
+                    projectile.damage *= 2;
+                    if (timer <= player.itemAnimationMax)
+                    {
+                        if (timer < threshhold)
+                        {
+                            player.itemAnimation = player.itemAnimationMax - threshhold + timer;
+                        }
+                        else
+                        {
+                            player.itemAnimation--;
+                            if (player.itemAnimation < (player.itemAnimationMax / 2) - 4)
+                            {
+                                player.itemAnimation = (player.itemAnimationMax / 2) - 4;
+                            }
+                        }
+
+                    }
+                }
+            }
+            if (shotguns.Contains(item.type) && projectile.Name.ToLower().Contains("bullet") && projectile.knockBack != -8 && config.enableShotgunRework)
             {
                 friction = (projectile.velocity.Length() * Main.rand.NextFloat(0.01f, 0.03f)) / projectile.extraUpdates;
                 isPellet = true;
@@ -71,7 +101,7 @@ public class ProjectileSounds : GlobalProjectile
 
         }
         
-        if (projectile.type == ProjectileID.BulletHighVelocity)
+        if (projectile.type == ProjectileID.BulletHighVelocity && config.enableHighVelocityRework)
         {
             projectile.extraUpdates = 256;
         }
@@ -80,7 +110,8 @@ public class ProjectileSounds : GlobalProjectile
 
     public override void Kill(Projectile projectile, int timeLeft)
     {
-        if (projectile.type == ProjectileID.BulletHighVelocity)
+        var config = SoundPackConfig.Instance;
+        if (projectile.type == ProjectileID.BulletHighVelocity && config.enableHighVelocityRework)
         {
             float dist = startpos.Distance(projectile.Center);
             ParticleEntity.Instantiate<TracerParticle>(h =>
@@ -98,8 +129,9 @@ public class ProjectileSounds : GlobalProjectile
 
     public override void AI(Projectile projectile)
     {
+        var config = SoundPackConfig.Instance;
         spawnTime++;
-        if (sourceToInherit != null && projectile.knockBack == -8)
+        if (sourceToInherit != null && projectile.knockBack == -8 && config.enableShotgunRework)
         {
             
             friction = (projectile.velocity.Length()*Main.rand.NextFloat(0.01f,0.03f))/projectile.extraUpdates;
@@ -111,18 +143,45 @@ public class ProjectileSounds : GlobalProjectile
         {
 
         }
-        if (projectile.aiStyle == ProjAIStyleID.Spear)
+        if (projectile.aiStyle == ProjAIStyleID.Spear && config.enableSpearRework)
         {
             if (item != null)
             {
                 timer++;
-                if (timer < item.useTime/2)
+                Player player = Main.player[projectile.owner];
+                var threshhold = item.useTime / 2;
+                if (timer <= player.itemAnimationMax)
                 {
-
+                    if (timer < threshhold)
+                    {
+                        player.itemAnimation = player.itemAnimationMax - threshhold + timer;
+                        projectile.velocity = new Vector2(projectile.velocity.Length(),0).RotatedBy(player.MountedCenter.AngleTo(Main.MouseWorld));
+                        player.direction = 1;
+                        if (Main.MouseWorld.X < player.MountedCenter.X)
+                            player.direction = -1;
+                        projectile.direction = player.direction;
+                    }
+                    else
+                    {
+                        projectile.friendly = true;
+                        if (!soundIsPlayed)
+                        {
+                            SoundEngine.PlaySound(item.UseSound);
+                            soundIsPlayed = true;
+                        }
+                        player.itemAnimation--;
+                        if (player.itemAnimation < (player.itemAnimationMax / 2)-5)
+                        {
+                            player.itemAnimation = (player.itemAnimationMax / 2)-5;
+                        }
+                    }
+                } else
+                {
+                    player.itemAnimation--;
                 }
             }
         }
-        if (isPellet)
+        if (isPellet && config.enableShotgunRework)
         {
             var frictionVector = new Vector2(friction, 0);
             projectile.velocity -= frictionVector.RotatedBy(projectile.velocity.ToRotation());
@@ -144,7 +203,7 @@ public class ProjectileSounds : GlobalProjectile
                 projectile.Kill();
             }
         }
-        if (projectile.type == ProjectileID.BulletHighVelocity)
+        if (projectile.type == ProjectileID.BulletHighVelocity && config.enableHighVelocityRework)
         {
             if (spawnTime >= 192 || projectile.position.Y+projectile.velocity.Y <= 0)
             {
@@ -172,22 +231,26 @@ public class ProjectileRicochet : GlobalProjectile
     public static readonly SoundStyle swingZenith = new SoundStyle("LizSoundPack/sounds/swingZenith") { Volume = 0.2f, PitchVariance = 0.4f, MaxInstances = 3,};
     public static Asset<Texture2D> Bullet1Flash = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/BulletFlash");
     public static Asset<Texture2D> Pellet = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/Pellet");
+    public static Asset<Texture2D> CometCore = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/CometBaseEffect");
+    public static Asset<Texture2D> CometTail = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/CometTrailTail");
     public static Asset<Texture2D> PelletBright = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/PelletBright");
 
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
-        if (projectile.type == 933)
+        var config = SoundPackConfig.Instance;
+        if (projectile.type == 933 && config.enableMeleeSounds)
             SoundEngine.PlaySound(swingZenith, projectile.Center);
     }
     public override bool OnTileCollide(Projectile projectile, Vector2 oldVelocity)
     {
-        if (projectile.Name.ToLower().Contains("bullet") && projectile.DamageType.Equals(DamageClass.Ranged))
+        var config = SoundPackConfig.Instance;
+        if (projectile.Name.ToLower().Contains("bullet") && projectile.DamageType.Equals(DamageClass.Ranged) && config.enableGunSounds)
             SoundEngine.PlaySound(hitWall, projectile.Center);
-        if (projectile.Name.ToLower().Contains("ice") || projectile.Name.ToLower().Contains("frost"))
+        if (projectile.Name.ToLower().Contains("ice") || projectile.Name.ToLower().Contains("frost") && config.enableElementalSounds)
         {
             SoundEngine.PlaySound(iceHitWall, projectile.Center);
         }
-        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
+        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet && config.enableShotgunRework)
         {
             var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
             // If the projectile hits the left or right side of the tile, reverse the X velocity
@@ -217,7 +280,7 @@ public class ProjectileRicochet : GlobalProjectile
 
                 });
             }
-            if (projectile.type == ProjectileID.BulletHighVelocity)
+            if (projectile.type == ProjectileID.BulletHighVelocity && config.enableHighVelocityRework)
             {
                 float dist = inst.startpos.Distance(projectile.Center);
                 ParticleEntity.Instantiate<TracerParticle>(h =>
@@ -242,7 +305,7 @@ public class ProjectileRicochet : GlobalProjectile
 
     public override bool PreDraw(Projectile projectile, ref Color lightColor)
     {
-           
+        var config = SoundPackConfig.Instance;
         if (projectile.type == ProjectileID.Bullet && projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
         { 
             var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
@@ -281,10 +344,10 @@ public class ProjectileRicochet : GlobalProjectile
             }
         }
 
-        if (projectile.type == ProjectileID.BulletHighVelocity)
+        if (projectile.type == ProjectileID.BulletHighVelocity && config.enableHighVelocityRework)
             return false;
 
-        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet)
+        if (projectile.GetGlobalProjectile<ProjectileSounds>().isPellet && config.enableShotgunRework)
         {
             var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
             var sb = Main.spriteBatch;
@@ -307,28 +370,82 @@ public class ProjectileRicochet : GlobalProjectile
             }
         }
 
-        if (projectile.hostile)
+        if (projectile.type == 16)
         {
-            var inst = projectile.GetGlobalProjectile<ProjectileSounds>();
+            for (int i = 0; i < 6; i++)
+            {
+                ParticleEntity.Instantiate<CometNebulaParticle>(p =>
+                {
+                    p.position = projectile.Center + new Vector2(Main.rand.NextFloat(-8, 8), Main.rand.NextFloat(-8, 8));
+                    p.velocity = new Vector2(1, 0).RotatedBy(Main.rand.NextFloat((float)(Math.PI * 2)));
+                    p.rotation = Main.rand.NextFloat((float)Math.PI);
+                    p.scale *= Main.rand.NextFloat(0.8f, 1.6f);
+                    p.rotspd = 0.02f;
+                    p.shrinkspd = 0.02f;
+                    p.velocityDecay = 0.9f;
+                    p.back = true;
+                    if (Main.rand.NextBool())
+                    {
+                        p.additive = false;
+                    } else
+                    {
+                        p.additive = true;
+                    }
+                });
+            }
+            if (Main.rand.NextBool(2))
+            {
+                ParticleEntity.Instantiate<CometStarParticle>(p =>
+                {
+                    p.position = projectile.Center + new Vector2(Main.rand.NextFloat(-8, 8), Main.rand.NextFloat(-8, 8));
+                    p.velocity = new Vector2(1, 0).RotatedBy(Main.rand.NextFloat((float)(Math.PI * 2)));
+                    p.velocityDecay = 0.98f;
+                    p.scale *= Main.rand.NextFloat(1, 1.3f);
+                    p.shrinkspd = 0.01f;
+                    p.scale *= 0.4f;
+                });
+            }
             var sb = Main.spriteBatch;
             var trans = Main.GameViewMatrix != null ? Main.GameViewMatrix.TransformationMatrix : Matrix.Identity;
             sb.End();
             sb.Begin(SpriteSortMode.Immediate, BlendState.Additive, SamplerState.AnisotropicWrap, DepthStencilState.Default, RasterizerState.CullNone, null, Matrix.Identity);
-            Texture2D tex = (Texture2D)TextureAssets.Projectile[projectile.type];
-            var frame = new Rectangle(0, 0, tex.Width, tex.Height / TextureAssets.Projectile[projectile.type].Value.Height);
-            //the red of the projectile
-            for (var i = 0; i < 8; i++)
+            Texture2D tex = (Texture2D)CometCore;
+            Texture2D tailtex = (Texture2D)CometTail;
+            projectile.Size = new Vector2(20, 20);
+            var origin = new Vector2(6, 24);
+            var dist = projectile.Center - projectile.position;
+            sb.Draw(tex, projectile.Center - Main.screenPosition, null, lightColor, projectile.timeLeft/4, tex.Size() / 2, 1.2f, SpriteEffects.None, 0);
+            for (var i = 1; i < projectile.oldPos.Length; i++)
             {
-                var rand = new Vector2(Main.rand.Next(-4, 5), Main.rand.Next(-4, 5));
-                
-                sb.Draw(tex, projectile.Center - Main.screenPosition + rand, frame, new Color(255,0,0,255), projectile.rotation, tex.Size() / 2, 1, SpriteEffects.None, 0);
+                if (projectile.oldPos[i] != new Vector2(0, 0))
+                {
+                    var scale = new Vector2(projectile.oldPos[i].Distance(projectile.oldPos[i - 1]) / 1.5f, 0.6f - 0.05f * i);
+                    var pos = projectile.oldPos[i] + dist;
+                    var angle = projectile.oldPos[i].AngleTo(projectile.oldPos[i - 1]);
+                    if (scale.Y > 0)
+                    {
+                        var colvalue = 0.5f * (1f - (i * 0.05f));
+                        sb.Draw(tailtex, pos - Main.screenPosition, null, lightColor, angle, new Vector2(0, tailtex.Height / 2), scale, SpriteEffects.None, 0);
+                    }
+                }
             }
-            //the center of the projectile
-            for (var i = 0; i < 2; i++)
+            /*for (int i = 0; i < 3; i++)
             {
-                sb.Draw(tex, projectile.Center - Main.screenPosition, null, Color.White, projectile.rotation, tex.Size() / 2, 1, SpriteEffects.None, 0);
-            }
-        }    
+                ParticleEntity.Instantiate<CometTrailParticle>(p =>
+                {
+                    p.position = projectile.Center;
+                    p.velocity = new Vector2(-Main.rand.NextFloat(1,2f), 0).RotatedBy(projectile.rotation);
+                    p.rotation = Main.rand.NextFloat((float)Math.PI);
+                    p.scale *= Main.rand.NextFloat(1, 1.3f);
+                    p.scale *= 0.8f;
+                    p.shrinkspd = 0.02f;
+                    p.owner = projectile;
+                    p.alpha = 0.001f;
+                });
+            }*/
+            
+            return false;
+        }
         return true;
     }
 }

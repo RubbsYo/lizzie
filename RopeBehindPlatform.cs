@@ -51,7 +51,7 @@ public class RopeBehindPlatform : ModSystem
 	{
         On.Terraria.Player.FindPulley += Player_FindPulley;
 
-		IL.Terraria.Main.DrawInventory += context =>
+		/*IL.Terraria.Main.DrawInventory += context =>
 		{
 			var cursor = new ILCursor(context);
 			while (cursor.TryGotoNext(i => i.MatchLdcI4(56)))
@@ -91,7 +91,7 @@ public class RopeBehindPlatform : ModSystem
 				cursor.Emit(OpCodes.Ldc_I4, 50);
 			}
 
-		};
+		};*/
 
 		IL.Terraria.GameContent.Drawing.TileDrawing.DrawBasicTile += context =>
 		{

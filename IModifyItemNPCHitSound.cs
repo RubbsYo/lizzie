@@ -36,7 +36,7 @@ public class NPCDamageAudio : GlobalNPC
 {
 	public static readonly SoundStyle LightSlash = new SoundStyle("LizSoundPack/sounds/lightSlash2") { Volume = 0.4f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle MediumSlash = new SoundStyle("LizSoundPack/sounds/mediumSlash_4") { Volume = 0.3f, PitchVariance = 0.25f, MaxInstances = 3, };
-	public static readonly SoundStyle HeavySlash = new SoundStyle("LizSoundPack/sounds/heavySlash") { Volume = 0.28f, PitchVariance = 0.4f, MaxInstances = 3, };
+	public static readonly SoundStyle HeavySlash = new SoundStyle("LizSoundPack/sounds/heavySlash") { Volume = 0.24f, PitchVariance = 0.4f, MaxInstances = 3, };
 	public static readonly SoundStyle MediumStrike = new SoundStyle("LizSoundPack/sounds/mediumStrike") { Volume = 0.5f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle LightBullet = new SoundStyle("LizSoundPack/sounds/mediumBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
 	public static readonly SoundStyle HeavyBullet = new SoundStyle("LizSoundPack/sounds/heavyBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
@@ -126,92 +126,74 @@ public class NPCDamageAudio : GlobalNPC
 				if (item.hammer > 0 && item.axe == 0)
 					customSoundStyle = MediumStrike;
 			}
-			if (customSoundStyle == hitGuard)
+			if (config.enableVisualEffects)
 			{
-				Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-				positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(player.Center));
-				positionInWorld = npc.Center + positionInWorld;
-				ParticleEntity.Instantiate<GuardParticle>(p =>
-				{
-					p.position = positionInWorld;
-				}
-				);
-			}
-			else
-			{
-				if (customSoundStyle == MediumSlash || customSoundStyle == HeavySlash)
+				if (customSoundStyle == hitGuard) //guard hitspark
 				{
 					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
 					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(player.Center));
 					positionInWorld = npc.Center + positionInWorld;
-
-					var strength = ((item.knockBack / 9) + (item.width / 18) + (item.damage / (item.rare + 1) / 32)) / 3;
-					if (strength < 0.12f)
-						strength = 0.12f;
-					if (strength > 1)
-						strength = 1 + (strength - 1) * 0.6f;
-					if (strength > 1.25f)
-						strength = 1.25f + (strength - 1.25f) * 0.4f;
-					if (strength > 1.5f)
-						strength = 1.5f;
-
-					if (strength >= 1f)
-						customSoundStyle = HeavySlash;
-					if (strength <= 0.5f)
-						customSoundStyle = LightSlash;
-					ParticleEntity.Instantiate<HitParticle>(h =>
+					ParticleEntity.Instantiate<GuardParticle>(p =>
 					{
-						h.position = positionInWorld;
-						h.scale *= strength*2;
+						p.position = positionInWorld;
 					}
 					);
-					for (var i = 0; i < strength; i++)
+				}
+				else
+				{
+					if (customSoundStyle == MediumSlash || customSoundStyle == HeavySlash)
 					{
-						ParticleEntity.Instantiate<SlashParticle>(p =>
+						Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+						positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(player.Center));
+						positionInWorld = npc.Center + positionInWorld;
+
+						var strength = ((item.knockBack / 9) + (item.width / 18) + (item.damage / (item.rare + 1) / 32)) / 3;
+						if (strength < 0.12f)
+							strength = 0.12f;
+						if (strength > 1)
+							strength = 1 + (strength - 1) * 0.6f;
+						if (strength > 1.25f)
+							strength = 1.25f + (strength - 1.25f) * 0.4f;
+						if (strength > 1.5f)
+							strength = 1.5f;
+
+						if (strength >= 1f)
+							customSoundStyle = HeavySlash;
+						if (strength <= 0.5f)
+							customSoundStyle = LightSlash;
+						ParticleEntity.Instantiate<HitParticle>(h =>
 						{
-							p.position = positionInWorld;
-							p.rotation += (float)Math.PI / 2;
-							if (strength > 0.5f)
-								p.rotation += (float)(Math.PI) / 6;
-							else
-								p.rotation -= (float)Math.PI / 4;
-							p.scale *= strength*0.7f;
+							h.position = positionInWorld;
+							h.scale *= strength * 2;
 						}
 						);
-					}
-					for (var i = 0; i < 6*strength; i++)
-					{
-						ParticleEntity.Instantiate<SparkParticle>(p =>
+						for (var i = 0; i < strength; i++)
 						{
-							p.position = positionInWorld;
-							p.velocity = new Vector2(-player.direction * (4 + Main.rand.NextFloat(4f)), -4 - Main.rand.NextFloat(4f)) * strength*2;
-							p.color = new Color(255,221,0);
-							p.trail_set_length(7 + Main.rand.Next(4));
-							p.maxTime = (int)((10 + Main.rand.Next(8)));
+							ParticleEntity.Instantiate<SlashParticle>(p =>
+							{
+								p.position = positionInWorld;
+								p.rotation += (float)Math.PI / 2;
+								if (strength > 0.5f)
+									p.rotation += (float)(Math.PI) / 6;
+								else
+									p.rotation -= (float)Math.PI / 4;
+								p.scale *= strength * 0.7f;
+							}
+							);
 						}
-						);
-					}
-					for (var i = 0; i < 6 * strength; i++)
-					{
-						int dir = 1;
-						if (Main.rand.NextBool())
+						for (var i = 0; i < 6 * strength; i++)
 						{
-							dir = -1;
+							ParticleEntity.Instantiate<SparkParticle>(p =>
+							{
+								p.position = positionInWorld;
+								p.velocity = new Vector2(-player.direction * (4 + Main.rand.NextFloat(4f)), -4 - Main.rand.NextFloat(4f)) * strength * 2;
+								p.color = new Color(255, 221, 0);
+								p.trail_set_length(7 + Main.rand.Next(4));
+								p.maxTime = (int)((10 + Main.rand.Next(8)));
+							}
+							);
 						}
-						var vec = new Vector2(0, 16);
-						ParticleEntity.Instantiate<StreakParticle>(p =>
-                        {
-							p.position = positionInWorld;
-							p.scale.Y = dir;
-							p.rotation = (player.Center + vec).AngleTo(npc.Center) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
-							p.scale *= strength;
-							p.alt = Main.rand.NextBool();
-						}
-						);
-					}
-					if (strength > 0.5f)
-					{
-						for (var i = 0; i < 5 * strength; i++)
+						for (var i = 0; i < 6 * strength; i++)
 						{
 							int dir = 1;
 							if (Main.rand.NextBool())
@@ -223,12 +205,33 @@ public class NPCDamageAudio : GlobalNPC
 							{
 								p.position = positionInWorld;
 								p.scale.Y = dir;
-								p.rotation = (npc.Center).AngleTo(player.Center + vec) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
+								p.rotation = (player.Center + vec).AngleTo(npc.Center) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
 								p.scale *= strength;
-								p.scale *= 0.7f;
 								p.alt = Main.rand.NextBool();
 							}
 							);
+						}
+						if (strength > 0.5f)
+						{
+							for (var i = 0; i < 5 * strength; i++)
+							{
+								int dir = 1;
+								if (Main.rand.NextBool())
+								{
+									dir = -1;
+								}
+								var vec = new Vector2(0, 16);
+								ParticleEntity.Instantiate<StreakParticle>(p =>
+								{
+									p.position = positionInWorld;
+									p.scale.Y = dir;
+									p.rotation = (npc.Center).AngleTo(player.Center + vec) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
+									p.scale *= strength;
+									p.scale *= 0.7f;
+									p.alt = Main.rand.NextBool();
+								}
+								);
+							}
 						}
 					}
 				}
@@ -272,102 +275,165 @@ public class NPCDamageAudio : GlobalNPC
 			}
 			if (projectile.arrow || projectile.aiStyle == 161)
 				customSoundStyle = LightSlash;
+			if (projectile.aiStyle == ProjAIStyleID.Spear)
+				customSoundStyle = MediumSlash;
 			if (projectile.DamageType.Equals(DamageClass.SummonMeleeSpeed))
 				customSoundStyle = hitWhip;
 			if (npc.GetGlobalNPC<NPCHitEffects>().highDefense)
 				customSoundStyle = hitGuard;
-			if (customSoundStyle == hitGuard)
+			if (config.enableVisualEffects)
 			{
-				Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-				positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
-				positionInWorld = npc.Center + positionInWorld;
-				ParticleEntity.Instantiate<GuardParticle>(p =>
+				if (customSoundStyle == hitGuard)
 				{
-					p.position = positionInWorld;
-				}
-				);
-			}
-			else if (customSoundStyle == LightMagic || customSoundStyle == MediumMagic || customSoundStyle == HeavyMagic)
-            {
-				var strength = 0.6f;
-				var amount = 1;
-				if (customSoundStyle == MediumMagic)
-					strength = 0.8f; amount = 5;
-				if (customSoundStyle == HeavyMagic)
-					strength = 1f; amount = 8;
-				Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-				positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
-				positionInWorld = npc.Center + positionInWorld;
-				for (var i = 0; i < amount; i++)
-				{
-					ParticleEntity.Instantiate<MagicParticle>(h =>
+					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+					positionInWorld = npc.Center + positionInWorld;
+					ParticleEntity.Instantiate<GuardParticle>(p =>
 					{
-						h.position = positionInWorld;
-						h.scale *= strength;
-						h.alt = Main.rand.NextBool();
+						p.position = positionInWorld;
+					}
+					);
+				}
+				else if (customSoundStyle == LightMagic || customSoundStyle == MediumMagic || customSoundStyle == HeavyMagic)
+				{
+					var strength = 0.6f;
+					var amount = 1;
+					if (customSoundStyle == MediumMagic)
+						strength = 0.8f; amount = 5;
+					if (customSoundStyle == HeavyMagic)
+						strength = 1f; amount = 8;
+					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+					positionInWorld = npc.Center + positionInWorld;
+					for (var i = 0; i < amount; i++)
+					{
+						ParticleEntity.Instantiate<MagicParticle>(h =>
+						{
+							h.position = positionInWorld;
+							h.scale *= strength;
+							h.alt = Main.rand.NextBool();
 
-					});
+						});
+					}
 				}
-			} else if (customSoundStyle == hitFire)
-            {
-				Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-				positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
-				positionInWorld = npc.Center + positionInWorld;
-				var strength = 0.6f;
-				var amount = 6;
-				int dir1 = 1;
-				if (Main.rand.NextBool())
+				else if (customSoundStyle == hitFire)
 				{
-					dir1 = -1;
-				}
-				ParticleEntity.Instantiate<FireHitParticle>(p =>
-				{
-					p.position = positionInWorld;
-					p.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir1;
-					p.scale *= strength * 1.5f;
-				});
-				for (var i = 0; i < amount; i++)
-				{
-					int dir = 1;
+					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+					positionInWorld = npc.Center + positionInWorld;
+					var strength = 0.6f;
+					var amount = 6;
+					int dir1 = 1;
 					if (Main.rand.NextBool())
 					{
-						dir = -1;
+						dir1 = -1;
 					}
-					ParticleEntity.Instantiate<FireStreakParticle>(h =>
+					ParticleEntity.Instantiate<FireHitParticle>(p =>
 					{
-						h.position = positionInWorld;
-						h.scale *= strength;
-						h.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength)*dir;
-
+						p.position = positionInWorld;
+						p.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir1;
+						p.scale *= strength * 1.5f;
 					});
+					for (var i = 0; i < amount; i++)
+					{
+						int dir = 1;
+						if (Main.rand.NextBool())
+						{
+							dir = -1;
+						}
+						ParticleEntity.Instantiate<FireStreakParticle>(h =>
+						{
+							h.position = positionInWorld;
+							h.scale *= strength;
+							h.rotation = (Vector2.Zero).AngleTo(projectile.oldVelocity) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
+
+						});
+					}
+				}
+				else
+				{
+					if (customSoundStyle == MediumGeneric)
+					{
+						Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+						positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+						positionInWorld = npc.Center + positionInWorld;
+						ParticleEntity.Instantiate<HitParticle>(p =>
+						{
+							p.position = positionInWorld;
+						}
+					);
+					}
+					if (customSoundStyle == hitWhip || customSoundStyle == HeavyBullet)
+					{
+						Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+						positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
+						positionInWorld = npc.Center + positionInWorld;
+						ParticleEntity.Instantiate<HitParticleHeavy>(p =>
+						{
+							p.position = positionInWorld;
+						}
+					);
+					}
+					if ((customSoundStyle == MediumSlash || customSoundStyle == HeavySlash) && projectile.GetGlobalProjectile<ProjectileSounds>().item != null)
+					{
+						Player myplayer = Main.player[projectile.owner];
+						Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
+						positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(myplayer.Center));
+						positionInWorld = npc.Center + positionInWorld;
+
+						var strength = ((projectile.knockBack / 7) + (projectile.damage / 2 / 12)) / 4;
+						if (strength < 0.5f)
+							strength = 0.5f;
+						if (strength > 1)
+							strength = 1;
+
+						if (strength >= 1f)
+							customSoundStyle = HeavySlash;
+						if (strength <= 0.5f)
+							customSoundStyle = LightSlash;
+						ParticleEntity.Instantiate<HitParticle>(h =>
+						{
+							h.position = positionInWorld;
+							h.scale *= strength * 2;
+						}
+						);
+						for (var i = 0; i < strength; i++)
+						{
+							ParticleEntity.Instantiate<SlashParticle>(p =>
+							{
+								p.position = positionInWorld;
+								p.rotation += (float)Math.PI / 2;
+								p.rotation -= (float)Math.PI / 4;
+								p.scale *= strength * 0.7f;
+							}
+							);
+						}
+						for (var i = 0; i < 8 * strength; i++)
+						{
+							int dir = 1;
+							if (Main.rand.NextBool())
+							{
+								dir = -1;
+							}
+							var vec = new Vector2(0, 0);
+							ParticleEntity.Instantiate<StreakParticle>(p =>
+							{
+								p.position = positionInWorld;
+								p.scale.Y = dir;
+								p.rotation = (myplayer.Center + vec).AngleTo(npc.Center) - Main.rand.NextFloat((float)Math.PI / 8 * strength) * dir;
+								p.scale *= strength;
+								p.alt = Main.rand.NextBool();
+								if (Main.rand.NextBool())
+								{
+									p.color = Color.Red;
+									p.additive = false;
+								}
+							}
+							);
+						}
+					}
 				}
 			}
-			else
-			{
-				if (customSoundStyle == MediumGeneric)
-				{
-					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
-					positionInWorld = npc.Center + positionInWorld;
-					ParticleEntity.Instantiate<HitParticle>(p =>
-					{
-						p.position = positionInWorld;
-					}
-				);
-				}
-				if (customSoundStyle == hitWhip || customSoundStyle == HeavyBullet)
-				{
-					Vector2 positionInWorld = new Vector2((npc.Hitbox.Height) / 2, 0);
-					positionInWorld = positionInWorld.RotatedBy(npc.Center.AngleTo(projectile.Center));
-					positionInWorld = npc.Center + positionInWorld;
-					ParticleEntity.Instantiate<HitParticleHeavy>(p =>
-					{
-						p.position = positionInWorld;
-					}
-				);
-				}
-			}
-			
 		}
 		hiteffects.lastLife = npc.life;
 		if (customSoundStyle.HasValue && config.enableHitSounds) {

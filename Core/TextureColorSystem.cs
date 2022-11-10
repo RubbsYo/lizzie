@@ -93,7 +93,6 @@ public class TextureColorSystem : ModSystem
 		if (numFittingPixels == 0)
 		{
 			result = Color.Transparent;
-			Main.NewText("sucks to suck");
 		}
 		else
 		{
@@ -160,7 +159,6 @@ public class TextureColorSystem : ModSystem
 		if (numFittingPixels == 0)
 		{
 			result = Color.Transparent;
-			Main.NewText("sucks to suck");
 		}
 		else
 		{

@@ -69,8 +69,6 @@ C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bi
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\Mono.Cecil.Mdb.pdb
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\Mono.Cecil.Pdb.pdb
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\Mono.Cecil.Rocks.pdb
-C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.RuntimeDetour.xml
-C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Utils.xml
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\ReLogic.pdb
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\ReLogic.xml
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\System.CodeDom.xml
@@ -165,3 +163,11 @@ C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\ob
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\obj\Debug\net6.0\refint\LizSoundPack.dll
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\obj\Debug\net6.0\LizSoundPack.pdb
 C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\obj\Debug\net6.0\ref\LizSoundPack.dll
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Backports.dll
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Core.dll
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.ILHelpers.dll
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Backports.pdb
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Core.pdb
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.ILHelpers.pdb
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.RuntimeDetour.pdb
+C:\Users\thesi\Documents\My Games\Terraria\tModLoader\ModSources\LizSoundPack\bin\Debug\net6.0\MonoMod.Utils.pdb

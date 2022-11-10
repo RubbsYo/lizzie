@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\UltrakillMovementJuice\\UltrakillMovement.csproj": {}
+    "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPackOLD.csproj": {}
   },
   "projects": {
-    "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\UltrakillMovementJuice\\UltrakillMovement.csproj": {
+    "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPackOLD.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\UltrakillMovementJuice\\UltrakillMovement.csproj",
-        "projectName": "UltrakillMovementJuice",
-        "projectPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\UltrakillMovementJuice\\UltrakillMovement.csproj",
+        "projectUniqueName": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPackOLD.csproj",
+        "projectName": "LizSoundPack",
+        "projectPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPackOLD.csproj",
         "packagesPath": "C:\\Users\\thesi\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\UltrakillMovementJuice\\obj\\",
+        "outputPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\thesi\\AppData\\Roaming\\NuGet\\NuGet.Config",

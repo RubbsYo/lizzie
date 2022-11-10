@@ -104,7 +104,6 @@ namespace LizSoundPack.Common.Hooks.Items
 							if (heldItem.useAnimation < heldItem.useTime)
 								num = heldItem.useAnimation;
 							num /= player.GetWeaponAttackSpeed(heldItem);
-							Main.NewText(num);
 							heldItem.UseSound = SetSoundStrength(num, 15, 25, Main.rand.NextBool() ? swingSharp : swingSharp2);
 						}
 					}
@@ -112,26 +111,32 @@ namespace LizSoundPack.Common.Hooks.Items
 					if (heldItem.useStyle == ItemUseStyleID.Shoot && heldItem.DamageType.Equals(DamageClass.Melee) && config.enableSpearSounds)
 						heldItem.UseSound = SetSoundStrength(heldItem.useTime, 26, 30, swingPole);
 				}
-				if (heldItem.Name.ToLower().Contains("fire") || heldItem.Name.ToLower().Contains("fiery") || heldItem.Name.ToLower().Contains("flam") || heldItem.Name.ToLower().Contains("sun"))
+				if (config.enableElementalSounds)
 				{
-					if (heldItem.DamageType.Name.ToLower().Contains("melee") || heldItem.DamageType.Equals(DamageClass.SummonMeleeSpeed))
+					if (heldItem.Name.ToLower().Contains("fire") || heldItem.Name.ToLower().Contains("fiery") || heldItem.Name.ToLower().Contains("flam") || heldItem.Name.ToLower().Contains("sun"))
 					{
-						if (heldItem.noUseGraphic)
-							heldItem.UseSound = swingFireS;
-						else
-							heldItem.UseSound = swingFireL;
+						if (heldItem.DamageType.Name.ToLower().Contains("melee") || heldItem.DamageType.Equals(DamageClass.SummonMeleeSpeed))
+						{
+							if (heldItem.noUseGraphic)
+								heldItem.UseSound = swingFireS;
+							else
+								heldItem.UseSound = swingFireL;
+						}
 					}
+					if (heldItem.Name.ToLower().Contains("ice") || heldItem.Name.ToLower().Contains("frost"))
+						heldItem.UseSound = swingIce;
 				}
-				if (heldItem.Name.ToLower().Contains("ice") || heldItem.Name.ToLower().Contains("frost"))
-					heldItem.UseSound = swingIce;
-				if (config.enableGunSounds)
-				{
-					//putting bow stuff here too for now
+				if (config.enableBowSounds)
+                {
 					if (heldItem.useAmmo == AmmoID.Arrow)
-                    {
+					{
 						var strength = (heldItem.useTime / 7 + heldItem.shootSpeed / 4);
 						heldItem.UseSound = SetSoundStrength(strength, 5.1f, 5.5f, swingBow);
 					}
+				}
+				if (config.enableGunSounds)
+				{
+					
 					if (heldItem.UseSound == SoundID.Item41)
 						heldItem.UseSound = firePistol;
 					if (heldItem.UseSound == SoundID.Item11 || heldItem.UseSound == SoundID.Item31)
