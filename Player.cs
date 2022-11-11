@@ -15,9 +15,9 @@ using Terraria.ModLoader.IO;
 using Terraria.Audio;
 using Terraria.GameContent;
 using ReLogic.Utilities;
-using LizSoundPack.Content.Items.Armor;
+using LizOverhaul.Content.Items.Armor;
 
-namespace LizSoundPack
+namespace LizOverhaul
 {
     public partial class UltrakillJuicePlayer : ModPlayer
     {
@@ -26,8 +26,8 @@ namespace LizSoundPack
             return Player.GetModPlayer<UltrakillJuicePlayer>();
         }
 
-        private SoundStyle hitCritical = new SoundStyle("LizSoundPack/sounds/hitCritical") { Volume = 0.6f, MaxInstances = 1, PitchVariance = 0.25f };
-        private SoundStyle hitPlayer = new SoundStyle("LizSoundPack/sounds/hitPlayer") { Volume = 0.7f, MaxInstances = 1, PitchVariance = 0.25f };
+        private SoundStyle hitCritical = new SoundStyle("LizOverhaul/sounds/hitCritical") { Volume = 0.6f, MaxInstances = 1, PitchVariance = 0.25f };
+        private SoundStyle hitPlayer = new SoundStyle("LizOverhaul/sounds/hitPlayer") { Volume = 0.7f, MaxInstances = 1, PitchVariance = 0.25f };
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit,
             ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource, ref int cooldownCounter)

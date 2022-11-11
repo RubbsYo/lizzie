@@ -3,7 +3,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 
-namespace LizSoundPack.Items
+namespace LizOverhaul.Items
 {
     public class Small_Teleporter : ModItem
     {

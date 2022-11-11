@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.ModLoader;
 
-namespace LizSoundPack.Core.Effects
+namespace LizOverhaul.Core.Effects
 {
 	// There is nothing that exists in vanilla that does what I want to do. I am sorry to Mirsario and shamelessly stealing his work
 	public class ParticleEntity : ILoadable

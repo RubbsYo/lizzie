@@ -2,7 +2,7 @@
 using Terraria.GameContent.Creative;
 using Terraria.ModLoader;
 
-namespace LizSoundPack.Content.Items.Ammo
+namespace LizOverhaul.Content.Items.Ammo
 {
 	public class PopBullet : ModItem
 	{

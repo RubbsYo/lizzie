@@ -10,7 +10,7 @@ using Terraria.GameContent.Drawing;
 using Terraria.GameContent;
 using Terraria.DataStructures;
 
-namespace LizSoundPack
+namespace LizOverhaul
 {
     public class GlobalTiles : GlobalTile
     {

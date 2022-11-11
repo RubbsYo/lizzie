@@ -5,17 +5,18 @@ using Terraria.Audio;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.GameContent;
-using LizSoundPack.Core.Time;
+using LizOverhaul.Core.Time;
 using ReLogic.Content;
+using LizOverhaul.NPCs;
 
-namespace LizSoundPack.Common.ModEntities.NPCs
+namespace LizOverhaul.Common.ModEntities.NPCs
 {
 	// Offsets, rotates, and scales enemies whenever they're hit, so that they look less static even when they're not moving.
 	// Looks like some sort of flinching.
 	public class NPCHitEffects : GlobalNPC
 	{
 		private const int EffectLength = 10;
-		private static readonly SoundStyle healSound = new SoundStyle("LizSoundPack/sounds/heal") { Volume = 1f, };
+		private static readonly SoundStyle healSound = new SoundStyle("LizOverhaul/sounds/heal") { Volume = 1f, };
 
 		private ulong lastHitTime;
 		private int lastHealth;
@@ -26,6 +27,7 @@ namespace LizSoundPack.Common.ModEntities.NPCs
 		private Color drawColor;
 		public bool highDefense;
 		public int lastLife;
+		public float drawRotation;
 
 		//public static Asset<Effect> spriteEffect = ModContent.Request<Effect>("Shader/fillWhite");
 
@@ -45,12 +47,37 @@ namespace LizSoundPack.Common.ModEntities.NPCs
 
 			const int EffectLength = 15;
 
-			if (delta <= EffectLength)
+			if (delta <= EffectLength || npc.GetGlobalNPC<NPCHitState>().FreezeFrames > 0)
 			{
 				float intensity = 1f - (delta / (float)EffectLength);
 				usedDrawPositionOffset = new Vector2(-8+Main.rand.Next(16),0) * intensity;
 
 				npc.position += usedDrawPositionOffset.Value;
+			}
+			var hitstate = npc.GetGlobalNPC<NPCHitState>();
+			if (hitstate.Hitstun > 0)
+            {
+				if (hitstate.FreezeFrames == 0)
+				{
+					if (hitstate.HitPropertyID == 2)
+					{
+						drawRotation += hitstate.KnockbackVelocity.X / 16;
+						usedDrawPositionOffset = new Vector2(0, Main.rand.Next(-4, 4));
+						npc.position += usedDrawPositionOffset.Value;
+					}
+					else
+					{
+						drawRotation += hitstate.KnockbackVelocity.X / 64;
+					}
+				}
+				drawRotation = Utilities.degToRad(Utilities.radToDeg(drawRotation) % 360);
+				npc.rotation += drawRotation;
+				usedDrawRotationOffset = drawRotation;
+			} else
+            {
+				drawRotation *= 0.8f;
+				npc.rotation += drawRotation;
+				usedDrawRotationOffset = drawRotation;
 			}
 
 			return true;
@@ -84,6 +111,7 @@ namespace LizSoundPack.Common.ModEntities.NPCs
 		private void ResetHitTime(NPC npc, int damage, float knockback, DamageClass type)
 		{
 			lastHitTime = TimeSystem.UpdateCount;
+			drawRotation = 0;
 		}
 	}
 }

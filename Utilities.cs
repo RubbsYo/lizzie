@@ -11,7 +11,7 @@ using ReLogic.Content;
 using Terraria.DataStructures;
 using Terraria.GameContent.Drawing;
 using Terraria.Graphics.Renderers;
-namespace LizSoundPack
+namespace LizOverhaul
 {
     class Utilities
     {
@@ -30,6 +30,16 @@ namespace LizSoundPack
 					return b;
 			}
 			return a;
+		}
+
+		public static float radToDeg(float radians)
+        {
+			return radians * (180 / (float)Math.PI);
+		}
+
+		public static float degToRad(float degrees)
+        {
+			return degrees * ((float)Math.PI / 180);
 		}
 
 		public static float Lerp(float a, float b, float value)

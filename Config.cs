@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Terraria.ModLoader.Config;
 
-namespace LizSoundPack
+namespace LizOverhaul
 {
     [Label("Client Config")]
     public class SoundPackConfig : ModConfig

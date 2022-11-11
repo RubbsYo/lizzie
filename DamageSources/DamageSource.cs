@@ -1,6 +1,6 @@
 ﻿using Terraria;
 
-namespace LizSoundPack.DamageSources
+namespace LizOverhaul.DamageSources
 {
 	public sealed class DamageSource
 	{

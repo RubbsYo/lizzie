@@ -17,10 +17,10 @@ using Terraria.ID;
 using Terraria.ObjectData;
 using Terraria.UI;
 using Terraria.Utilities;
-using LizSoundPack.Core.Effects;
-using LizSoundPack.Content.Effects;
+using LizOverhaul.Core.Effects;
+using LizOverhaul.Content.Effects;
 
-namespace LizSoundPack.Content;
+namespace LizOverhaul.Content;
 
 public class RopeBehindPlatform : ModSystem
 {

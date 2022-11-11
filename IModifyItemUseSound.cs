@@ -3,12 +3,12 @@ using Terraria.Audio;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
 using Terraria.ID;
-using Hook = LizSoundPack.Common.Hooks.Items.IModifyItemUseSound;
-using LizSoundPack.Projectiles;
-using LizSoundPack;
+using Hook = LizOverhaul.Common.Hooks.Items.IModifyItemUseSound;
+using LizOverhaul.Projectiles;
+using LizOverhaul;
 using Microsoft.Xna.Framework;
 
-namespace LizSoundPack.Common.Hooks.Items
+namespace LizOverhaul.Common.Hooks.Items
 {
 	public interface IModifyItemUseSound
 	{
@@ -35,7 +35,7 @@ namespace LizSoundPack.Common.Hooks.Items
 			string[] suffixes = { "S", "M", "L" };
 			for(var i = 0; i <= 2; i++)
             {
-				array[i] = new SoundStyle("LizSoundPack/sounds/" + filename + suffixes[i]);
+				array[i] = new SoundStyle("LizOverhaul/sounds/" + filename + suffixes[i]);
 				array[i].Volume = volume;
 				array[i].PitchVariance = 0.25f;
 			}
@@ -56,14 +56,14 @@ namespace LizSoundPack.Common.Hooks.Items
 		public static readonly SoundStyle[] swingThrow = loadSoundStrengthSet("swingThrow", 0.35f);
 		public static readonly SoundStyle[] swingPole = loadSoundStrengthSet("swingPole", 0.35f);
 		public static readonly SoundStyle[] swingBow = loadSoundStrengthSet("swingBow", 0.4f);
-		public static readonly SoundStyle swingFireS = new SoundStyle("LizSoundPack/sounds/swingFireLight") { Volume = 0.4f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingFireL = new SoundStyle("LizSoundPack/sounds/swingFire") { Volume = 0.3f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle swingIce = new SoundStyle("LizSoundPack/sounds/swingIce") { Volume = 0.6f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle firePistol = new SoundStyle("LizSoundPack/sounds/firePistol") { Volume = 0.2f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle fireShotgun = new SoundStyle("LizSoundPack/sounds/fireShotgun") { Volume = 0.4f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle fireMachinegun = new SoundStyle("LizSoundPack/sounds/fireMachinegun") { Volume = 0.3f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle fireRifle = new SoundStyle("LizSoundPack/sounds/fireRifle") { Volume = 0.3f, PitchVariance = 0.25f, };
-		public static readonly SoundStyle fireVeryStrong = new SoundStyle("LizSoundPack/sounds/fireVeryStrong") { Volume = 0.4f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle swingFireS = new SoundStyle("LizOverhaul/sounds/swingFireLight") { Volume = 0.4f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle swingFireL = new SoundStyle("LizOverhaul/sounds/swingFire") { Volume = 0.3f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle swingIce = new SoundStyle("LizOverhaul/sounds/swingIce") { Volume = 0.6f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle firePistol = new SoundStyle("LizOverhaul/sounds/firePistol") { Volume = 0.2f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle fireShotgun = new SoundStyle("LizOverhaul/sounds/fireShotgun") { Volume = 0.4f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle fireMachinegun = new SoundStyle("LizOverhaul/sounds/fireMachinegun") { Volume = 0.3f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle fireRifle = new SoundStyle("LizOverhaul/sounds/fireRifle") { Volume = 0.3f, PitchVariance = 0.25f, };
+		public static readonly SoundStyle fireVeryStrong = new SoundStyle("LizOverhaul/sounds/fireVeryStrong") { Volume = 0.4f, PitchVariance = 0.25f, };
 
 		public override void Load()
 		{

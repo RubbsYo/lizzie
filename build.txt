@@ -1,3 +1,3 @@
-displayName = Liz Soundpack
+displayName = Liz Overhaul
 author = liz v. valentine
 version = 0.1

@@ -3,10 +3,10 @@ using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ID;
-using LizSoundPack.Core.Effects;
-using LizSoundPack.Content.Effects;
+using LizOverhaul.Core.Effects;
+using LizOverhaul.Content.Effects;
 
-namespace LizSoundPack.Dusts;
+namespace LizOverhaul.Dusts;
 
 public class DustOverwrites : ModSystem
 {

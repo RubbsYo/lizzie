@@ -6,7 +6,7 @@ using ReLogic.Content;
 using Terraria.ModLoader;
 using Terraria;
 
-namespace LizSoundPack.Common.TextureColors;
+namespace LizOverhaul.Common.TextureColors;
 
 /// <summary> This system provides information about average colors of texturse. </summary>
 [Autoload(Side = ModSide.Client)]

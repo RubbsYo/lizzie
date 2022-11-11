@@ -3,7 +3,7 @@ using System.Diagnostics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace LizSoundPack.Core.Time
+namespace LizOverhaul.Core.Time
 {
 	public sealed class TimeSystem : ModSystem
 	{

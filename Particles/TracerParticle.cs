@@ -7,17 +7,17 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
-using LizSoundPack.Content.Effects;
+using LizOverhaul.Content.Effects;
 using ReLogic.Content;
 
-namespace LizSoundPack.Content.Effects
+namespace LizOverhaul.Content.Effects
 {
     [Autoload(Side = ModSide.Client)]
     public class TracerParticle : Particle
     {
         float shrinkspd = 0.8f;
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/TracerEffect", AssetRequestMode.ImmediateLoad);
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizOverhaul/Particles/Textures/TracerEffect", AssetRequestMode.ImmediateLoad);
         public override void Init()
         {
             texture = (Texture2D)tex;

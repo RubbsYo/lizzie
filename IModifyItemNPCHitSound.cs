@@ -6,15 +6,15 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
-using Hook = LizSoundPack.Common.Hooks.Items.IModifyItemNPCHitSound;
-using LizSoundPack.DamageSources;
-using LizSoundPack.Projectiles;
+using Hook = LizOverhaul.Common.Hooks.Items.IModifyItemNPCHitSound;
+using LizOverhaul.DamageSources;
+using LizOverhaul.Projectiles;
 using Microsoft.Xna.Framework;
-using LizSoundPack.Common.ModEntities.NPCs;
-using LizSoundPack.Content.Effects;
-using LizSoundPack.Core.Effects;
+using LizOverhaul.Common.ModEntities.NPCs;
+using LizOverhaul.Content.Effects;
+using LizOverhaul.Core.Effects;
 
-namespace LizSoundPack.Common.Hooks.Items;
+namespace LizOverhaul.Common.Hooks.Items;
 
 public interface IModifyItemNPCHitSound
 {
@@ -34,22 +34,22 @@ public interface IModifyItemNPCHitSound
 
 public class NPCDamageAudio : GlobalNPC
 {
-	public static readonly SoundStyle LightSlash = new SoundStyle("LizSoundPack/sounds/lightSlash2") { Volume = 0.4f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle MediumSlash = new SoundStyle("LizSoundPack/sounds/mediumSlash_4") { Volume = 0.3f, PitchVariance = 0.25f, MaxInstances = 3, };
-	public static readonly SoundStyle HeavySlash = new SoundStyle("LizSoundPack/sounds/heavySlash") { Volume = 0.24f, PitchVariance = 0.4f, MaxInstances = 3, };
-	public static readonly SoundStyle MediumStrike = new SoundStyle("LizSoundPack/sounds/mediumStrike") { Volume = 0.5f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle LightBullet = new SoundStyle("LizSoundPack/sounds/mediumBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle HeavyBullet = new SoundStyle("LizSoundPack/sounds/heavyBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle LightMagic = new SoundStyle("LizSoundPack/sounds/lightMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle MediumMagic = new SoundStyle("LizSoundPack/sounds/mediumMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle HeavyMagic = new SoundStyle("LizSoundPack/sounds/heavyMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle LightGeneric = new("LizSoundPack/sounds/lightGeneric") { Volume = 0.6f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle MediumGeneric = new("LizSoundPack/sounds/mediumGeneric") { Volume = 0.6f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle hitWhip = new("LizSoundPack/sounds/hitWhip_2") { Volume = 0.3f, PitchVariance = 0.25f, };
-	public static readonly SoundStyle hitPhase = new("LizSoundPack/sounds/hitPhase") { Volume = 0.6f, PitchVariance = 0.25f, MaxInstances = 5, };
-	public static readonly SoundStyle hitFire = new("LizSoundPack/sounds/hitFire") { Volume = 0.55f, PitchVariance = 0.25f, MaxInstances = 5,};
-	public static readonly SoundStyle hitIce = new("LizSoundPack/sounds/hitIce") { Volume = 0.55f, PitchVariance = 0.25f, MaxInstances = 5, };
-	public static readonly SoundStyle hitGuard = new("LizSoundPack/sounds/hitGuard") { Volume = 0.5f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle LightSlash = new SoundStyle("LizOverhaul/sounds/lightSlash2") { Volume = 0.4f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle MediumSlash = new SoundStyle("LizOverhaul/sounds/mediumSlash_4") { Volume = 0.3f, PitchVariance = 0.25f, MaxInstances = 3, };
+	public static readonly SoundStyle HeavySlash = new SoundStyle("LizOverhaul/sounds/heavySlash") { Volume = 0.24f, PitchVariance = 0.4f, MaxInstances = 3, };
+	public static readonly SoundStyle MediumStrike = new SoundStyle("LizOverhaul/sounds/mediumStrike") { Volume = 0.5f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle LightBullet = new SoundStyle("LizOverhaul/sounds/mediumBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle HeavyBullet = new SoundStyle("LizOverhaul/sounds/heavyBullet") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle LightMagic = new SoundStyle("LizOverhaul/sounds/lightMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle MediumMagic = new SoundStyle("LizOverhaul/sounds/mediumMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle HeavyMagic = new SoundStyle("LizOverhaul/sounds/heavyMagic") { Volume = 0.5f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle LightGeneric = new("LizOverhaul/sounds/lightGeneric") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle MediumGeneric = new("LizOverhaul/sounds/mediumGeneric") { Volume = 0.6f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle hitWhip = new("LizOverhaul/sounds/hitWhip_2") { Volume = 0.3f, PitchVariance = 0.25f, };
+	public static readonly SoundStyle hitPhase = new("LizOverhaul/sounds/hitPhase") { Volume = 0.6f, PitchVariance = 0.25f, MaxInstances = 5, };
+	public static readonly SoundStyle hitFire = new("LizOverhaul/sounds/hitFire") { Volume = 0.55f, PitchVariance = 0.25f, MaxInstances = 5,};
+	public static readonly SoundStyle hitIce = new("LizOverhaul/sounds/hitIce") { Volume = 0.55f, PitchVariance = 0.25f, MaxInstances = 5, };
+	public static readonly SoundStyle hitGuard = new("LizOverhaul/sounds/hitGuard") { Volume = 0.5f, PitchVariance = 0.25f, };
 
 	public override void Load()
 	{

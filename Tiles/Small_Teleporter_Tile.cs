@@ -10,11 +10,11 @@ using Terraria.Enums;
 using static Terraria.ModLoader.ModContent;
 using Terraria.GameContent.ObjectInteractions;
 
-namespace LizSoundPack.Tiles
+namespace LizOverhaul.Tiles
 {
 	public class Small_Teleporter_Tile : ModTile
 	{
-		public static readonly SoundStyle TeleportSound = new SoundStyle("LizSoundPack/sounds/teleportStairs") { Volume = 0.7f };
+		public static readonly SoundStyle TeleportSound = new SoundStyle("LizOverhaul/sounds/teleportStairs") { Volume = 0.7f };
 		public override void SetStaticDefaults() 
 		{
 			Main.tileLighted[Type] = true;

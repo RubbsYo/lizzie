@@ -7,18 +7,18 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.GameContent;
 using System;
-using LizSoundPack.Content.Effects;
-using LizSoundPack.Core.Effects;
+using LizOverhaul.Content.Effects;
+using LizOverhaul.Core.Effects;
 using ReLogic.Content;
-using LizSoundPack.Common.TextureColors;
+using LizOverhaul.Common.TextureColors;
 
-namespace LizSoundPack.Content.Effects
+namespace LizOverhaul.Content.Effects
 {
     [Autoload(Side = ModSide.Client)]
     public class CometTrailParticle : DustParticle
     {
 
-        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/CometTrailEffect", AssetRequestMode.ImmediateLoad);
+        private static Asset<Texture2D> tex = ModContent.Request<Texture2D>("LizOverhaul/Particles/Textures/CometTrailEffect", AssetRequestMode.ImmediateLoad);
         public Projectile owner;
         public override void Init()
         {

@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Terraria;
-using LizSoundPack.Core.Effects;
+using LizOverhaul.Core.Effects;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
-namespace LizSoundPack.Content.Effects
+namespace LizOverhaul.Content.Effects
 {
 	[Autoload(Side = ModSide.Client)]
 	public class SparkParticle : ParticleEntity

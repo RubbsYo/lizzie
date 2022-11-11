@@ -15,7 +15,7 @@ using Terraria.ModLoader.IO;
 using Terraria.Audio;
 
 
-namespace LizSoundPack
+namespace LizOverhaul
 {
 	public partial class ScreenShakePlayer : ModPlayer
 	{

@@ -7,18 +7,18 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Core;
-using Hook = LizSoundPack.Common.Hooks.Items.IModifyItemNPCHitSound;
-using LizSoundPack.DamageSources;
+using Hook = LizOverhaul.Common.Hooks.Items.IModifyItemNPCHitSound;
+using LizOverhaul.DamageSources;
 using Terraria.DataStructures;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria.GameContent;
 using ReLogic.Content;
-using LizSoundPack.Content.Effects;
-using LizSoundPack.Core.Effects;
-using LizSoundPack.Common.TextureColors;
+using LizOverhaul.Content.Effects;
+using LizOverhaul.Core.Effects;
+using LizOverhaul.Common.TextureColors;
 
-namespace LizSoundPack.Projectiles;
+namespace LizOverhaul.Projectiles;
 
 public class ProjectileSounds : GlobalProjectile
 {
@@ -226,14 +226,14 @@ public class ProjectileSounds : GlobalProjectile
 
 public class ProjectileRicochet : GlobalProjectile
 {
-    public static readonly SoundStyle hitWall = new SoundStyle("LizSoundPack/sounds/bulletHitWall") { Volume = 0.2f, PitchVariance = 0.25f, };
-    public static readonly SoundStyle iceHitWall = new SoundStyle("LizSoundPack/sounds/iceHitWall") { Volume = 0.5f, PitchVariance = 0.25f, };
-    public static readonly SoundStyle swingZenith = new SoundStyle("LizSoundPack/sounds/swingZenith") { Volume = 0.2f, PitchVariance = 0.4f, MaxInstances = 3,};
-    public static Asset<Texture2D> Bullet1Flash = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/BulletFlash");
-    public static Asset<Texture2D> Pellet = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/Pellet");
-    public static Asset<Texture2D> CometCore = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/CometBaseEffect");
-    public static Asset<Texture2D> CometTail = ModContent.Request<Texture2D>("LizSoundPack/Particles/Textures/CometTrailTail");
-    public static Asset<Texture2D> PelletBright = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/PelletBright");
+    public static readonly SoundStyle hitWall = new SoundStyle("LizOverhaul/sounds/bulletHitWall") { Volume = 0.2f, PitchVariance = 0.25f, };
+    public static readonly SoundStyle iceHitWall = new SoundStyle("LizOverhaul/sounds/iceHitWall") { Volume = 0.5f, PitchVariance = 0.25f, };
+    public static readonly SoundStyle swingZenith = new SoundStyle("LizOverhaul/sounds/swingZenith") { Volume = 0.2f, PitchVariance = 0.4f, MaxInstances = 3,};
+    public static Asset<Texture2D> Bullet1Flash = ModContent.Request<Texture2D>("LizOverhaul/Projectiles/BulletFlash");
+    public static Asset<Texture2D> Pellet = ModContent.Request<Texture2D>("LizOverhaul/Projectiles/Pellet");
+    public static Asset<Texture2D> CometCore = ModContent.Request<Texture2D>("LizOverhaul/Particles/Textures/CometBaseEffect");
+    public static Asset<Texture2D> CometTail = ModContent.Request<Texture2D>("LizOverhaul/Particles/Textures/CometTrailTail");
+    public static Asset<Texture2D> PelletBright = ModContent.Request<Texture2D>("LizOverhaul/Projectiles/PelletBright");
 
     public override void OnSpawn(Projectile projectile, IEntitySource source)
     {
@@ -300,7 +300,7 @@ public class ProjectileRicochet : GlobalProjectile
 
     public override void Load()
     {
-        TextureAssets.Projectile[ProjectileID.Bullet] = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/Bullet");
+        TextureAssets.Projectile[ProjectileID.Bullet] = ModContent.Request<Texture2D>("LizOverhaul/Projectiles/Bullet");
     }
 
     public override bool PreDraw(Projectile projectile, ref Color lightColor)
@@ -458,7 +458,7 @@ public class PopBullet : ModProjectile
         ProjectileID.Sets.TrailCacheLength[Projectile.type] = 5; // The length of old position to be recorded
         ProjectileID.Sets.TrailingMode[Projectile.type] = 0; // The recording mode
     }
-    public static Asset<Texture2D> PopBulletFlash = ModContent.Request<Texture2D>("LizSoundPack/Projectiles/PopBulletFlash");
+    public static Asset<Texture2D> PopBulletFlash = ModContent.Request<Texture2D>("LizOverhaul/Projectiles/PopBulletFlash");
     public static bool canDupe = true;
     public static Projectile? child;
 

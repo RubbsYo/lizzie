@@ -2,7 +2,7 @@
 using Terraria;
 using Microsoft.Xna.Framework;
 
-namespace LizSoundPack.DamageSources
+namespace LizOverhaul.DamageSources
 {
 	public static class ProjectileExtensions
 	{

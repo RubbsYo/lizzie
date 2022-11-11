@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace LizSoundPack.Core.Effects
+namespace LizOverhaul.Core.Effects
 {
 	public class ParticleEntitySystem : ModSystem
 	{
