@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "cQ82QTFOPgnbrW/aE7G2eUnpo1SHau3VQERqt46vvbSDF3HYAstMy2fGrQnzHlYPbPucv51IAscGwg03U2Squg==",
+  "dgSpecHash": "7mLJVFl4XitvxM6gzDz4kZqZcGUTpeAtIJ+bp4oJ9ITmscEKnJDMahLnB8EQUKlxn3HTmvuMX3XkanffA7fbnA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPack.csproj",
+  "projectFilePath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizOverhaul\\LizOverhaul.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\thesi\\.nuget\\packages\\tmodloader.codeassist\\0.1.5\\tmodloader.codeassist.0.1.5.nupkg.sha512"
   ],

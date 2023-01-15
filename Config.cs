@@ -72,5 +72,14 @@ namespace LizOverhaul
         [Tooltip("Completely reworks existing particles (e.g fire) to look subjectively cooler.\n[Default: On]")]
         [DefaultValue(true)]
         public bool enableParticleReplacements { get; set; }
+
+        [Label("Melee Style")]
+        [Tooltip("Melee swing style to use.\n[Default: 1]")]
+        [Slider]
+        [DrawTicks]
+        [DefaultValue(1)]
+        [Range(0, 1)]
+        [Increment(1)]
+        public int MeleeStyle { get; set; }
     }
 }

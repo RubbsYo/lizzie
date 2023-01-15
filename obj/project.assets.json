@@ -36,11 +36,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPack.csproj",
+      "projectUniqueName": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizOverhaul\\LizOverhaul.csproj",
       "projectName": "LizOverhaul",
-      "projectPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\LizSoundPack.csproj",
+      "projectPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizOverhaul\\LizOverhaul.csproj",
       "packagesPath": "C:\\Users\\thesi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizSoundPack\\obj\\",
+      "outputPath": "C:\\Users\\thesi\\Documents\\My Games\\Terraria\\tModLoader\\ModSources\\LizOverhaul\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\thesi\\AppData\\Roaming\\NuGet\\NuGet.Config",
